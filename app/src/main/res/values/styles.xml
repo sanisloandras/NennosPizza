@@ -1,0 +1,26 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#fff</item>
+        <item name="colorPrimaryDark">#fff</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/arrow_left</item>
+        <item name="android:titleTextColor">@color/red</item>
+        <item name="titleTextColor">@color/red</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="AddToCart" parent="Widget.AppCompat.TextView">
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

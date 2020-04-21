@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Nenno\'s Pizza</string>
+    <string name="unexpected_error">Unexpected error :/</string>
+    <string name="cart">Cart</string>
+    <string name="add_to_cart">Add to cart ($%.1f)</string>
+    <string name="added_to_cart">Added to cart</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="checkout">Checkout ($%.1f)</string>
+    <string name="empty_cart">Your cart is empty :/</string>
+    <string name="drinks">Drinks</string>
+</resources>
