@@ -12,13 +12,22 @@ import com.sanislo.nennospizza.presentation.PizzaImageLoaderImpl
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
     factory { checkoutService() }
-    factory { dataService() }
+    factory {
+        get<Retrofit>(Retrofit::class.java, named("data")).create(DataService::class.java)
+    }
+    factory(named("data")) {
+        Retrofit.Builder()
+            .baseUrl("https://doclerlabs.github.io/mobile-native-challenge/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
     factory { Room
         .databaseBuilder(androidApplication(), AppDb::class.java, "appdb.db")
         .fallbackToDestructiveMigration()
@@ -61,20 +70,15 @@ val appModule = module {
     factory { CartUseCase(get(), get()) }
 }
 
-fun dataService(): DataService {
-    return Retrofit.Builder()
-        .baseUrl("https://doclerlabs.github.io/mobile-native-challenge/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(DataService::class.java)
+fun checkoutService(): CheckoutService {
+    return checkoutRetrofit().create(CheckoutService::class.java)
 }
 
-fun checkoutService(): CheckoutService {
+fun checkoutRetrofit(): Retrofit {
     return Retrofit.Builder()
         .baseUrl("http://httpbin.org/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-        .create(CheckoutService::class.java)
 }
 
 fun getModules(): List<Module> {

@@ -9,13 +9,14 @@ import java.util.*
 class AddDrinkToCartUseCase(private val drinksRepository: DrinksRepository,
                             private val drinkCartDao: DrinkCartDao) {
     suspend fun invoke(drinkListItem: DrinkListItem) {
-        val drink = drinksRepository.drinks().first { it.id == drinkListItem.id }
-        val drinkCartItemEntity = DrinkCartItemEntity(
-            UUID.randomUUID().toString(),
-            drink.id,
-            drink.name,
-            "$${drink.price}",
-            Date())
-        drinkCartDao.insert(drinkCartItemEntity)
+        val drinkCartItemEntity = drinksRepository.drinks().firstOrNull { it.id == drinkListItem.id }?.let { drink ->
+            DrinkCartItemEntity(
+                UUID.randomUUID().toString(),
+                drink.id,
+                drink.name,
+                "$${drink.price}",
+                Date())
+        }
+        if (drinkCartItemEntity != null) drinkCartDao.insert(drinkCartItemEntity)
     }
 }

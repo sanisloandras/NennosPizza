@@ -7,7 +7,7 @@ interface DrinksRepository {
     suspend fun drinks(): IngOrDrinkResponse
 }
 
-class DrinksRepositoryImpl(private val dataService: DataService) :
+class DrinksRepositoryImpl (private val dataService: DataService) :
     DrinksRepository {
     private var cache: IngOrDrinkResponse? = null
 
