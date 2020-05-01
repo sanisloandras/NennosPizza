@@ -40,7 +40,7 @@ class GetPizzaListUseCase(private val pizzaRepository: PizzaRepository,
     }
 
     //this can be used too
-    suspend fun asFlow(): Flow<List<PizzaListItem>> {
+    /*suspend fun asFlow(): Flow<List<PizzaListItem>> {
         val pizzasFlow = flow {
             emit(pizzaRepository.pizzas())
         }.flowOn(Dispatchers.IO)
@@ -65,5 +65,5 @@ class GetPizzaListUseCase(private val pizzaRepository: PizzaRepository,
                 )
             }
         }
-    }
+    }*/
 }
