@@ -8,6 +8,7 @@ class IngredientCheckUseCase(private val ingredientsRepository: IngredientsRepos
     suspend fun invoke(pizzaDetails: PizzaDetails?, ingredientId: Int, isSelected: Boolean): PizzaDetails? {
         return pizzaDetails?.let { pizzaDetails ->
             val selectedIngredients = pizzaDetails.initialSelection.toMutableMap()
+            if (selectedIngredients[ingredientId] == isSelected) return pizzaDetails
             selectedIngredients[ingredientId] = isSelected
             val newPrice = ingredientsRepository.ingredients().first {
                 it.id == ingredientId

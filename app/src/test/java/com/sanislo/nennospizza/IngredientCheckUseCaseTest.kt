@@ -65,13 +65,12 @@ class IngredientCheckUseCaseTest {
             IngredientListItem(9, "Bottarga", "$2.5"),
             IngredientListItem(10, "Tuna", "$2.2")
         )
-        val expected = PizzaDetails(
+        return PizzaDetails(
             "Boscaiola",
             "https://cdn.pbrd.co/images/tOhJQ5N3.png",
             ingredientsListItems,
             mapOf(1 to true, 2 to true, 3 to true, 4 to true, 9 to true),
             11.5
         )
-        return expected
     }
 }
