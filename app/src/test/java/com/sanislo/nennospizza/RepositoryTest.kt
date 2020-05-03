@@ -1,16 +1,13 @@
 package com.sanislo.nennospizza
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.gson.Gson
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.api.data.DataService
 import com.sanislo.nennospizza.api.data.IngOrDrinkResponse
 import com.sanislo.nennospizza.api.data.PizzasResponse
-import com.sanislo.nennospizza.db.DrinkCartDao
-import com.sanislo.nennospizza.domain.repository.*
-import com.sanislo.nennospizza.domain.usecase.AddDrinkToCartUseCase
-import com.sanislo.nennospizza.presentation.drinks.DrinkListItem
+import com.sanislo.nennospizza.domain.repository.DrinksRepositoryImpl
+import com.sanislo.nennospizza.domain.repository.IngredientsRepositoryImpl
+import com.sanislo.nennospizza.domain.repository.PizzaRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test

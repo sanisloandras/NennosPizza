@@ -21,5 +21,4 @@ class DrinkCartItem(
     override fun hashCode(): Int {
         return Objects.hash(super.hashCode(), drinkId)
     }
-
 }

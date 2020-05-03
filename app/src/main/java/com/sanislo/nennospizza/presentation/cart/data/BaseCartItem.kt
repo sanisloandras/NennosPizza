@@ -29,4 +29,8 @@ abstract class BaseCartItem(
         result = 31 * result + date.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "BaseCartItem(id='$id', name='$name', price='$price', date=$date)"
+    }
 }
