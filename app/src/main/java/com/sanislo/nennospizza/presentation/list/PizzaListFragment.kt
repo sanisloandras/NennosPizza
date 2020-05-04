@@ -10,9 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.MainViewModel
-import kotlinx.android.synthetic.main.fragment_cart.*
 import kotlinx.android.synthetic.main.fragment_pizza_list.*
-import kotlinx.android.synthetic.main.fragment_pizza_list.toolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
@@ -53,7 +51,7 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
     }
 
     private fun observePizzaList() {
-        viewModel.pizzaList.observe(viewLifecycleOwner, Observer<List<PizzaListItem>> {
+        viewModel.pizzaList.observe(viewLifecycleOwner, Observer {
             pizzaListAdapter.submitList(it)
         })
     }
