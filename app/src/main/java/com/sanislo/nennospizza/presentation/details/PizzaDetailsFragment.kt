@@ -7,15 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import com.sanislo.nennospizza.R
-import com.sanislo.nennospizza.presentation.MainViewModel
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_pizza_details.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: PizzaDetailsViewModel by viewModel()
     private val pizzaImageLoader: PizzaImageLoader by inject()
     private val ingredientsAdapter = IngredientsAdapter(object : IngredientsAdapter.ClickHandler {
         override fun onSelectionChanged(selection: Set<Int>) {
@@ -67,5 +66,15 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
             ingredientsAdapter.selection = it.initialSelection.toMutableSet()
             ingredientsAdapter.submitList(it.ingredientList)
         })
+    }
+
+    companion object {
+        fun newInstance(pizzaDetails: PizzaDetails): PizzaDetailsFragment {
+            return PizzaDetailsFragment().apply {
+                arguments = Bundle().apply {
+                    putP
+                }
+            }
+        }
     }
 }
