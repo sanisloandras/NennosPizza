@@ -5,10 +5,6 @@ import com.sanislo.nennospizza.domain.repository.PizzaRepository
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.withContext
 
 class GetPizzaListUseCase(private val pizzaRepository: PizzaRepository,
@@ -33,7 +29,7 @@ class GetPizzaListUseCase(private val pizzaRepository: PizzaRepository,
                     ingredientsString,
                     "$$price",
                     pizza.imageUrl,
-                    pizza.ingredients
+                    pizza.ingredients.toSet()
                 )
             }
         }

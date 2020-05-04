@@ -22,13 +22,11 @@ class GetPizzaDetailsUseCase(private val pizzaRepository: PizzaRepository,
         val ingredientList = ingredients.map {
             IngredientListItem(it.id, it.name, "$${it.price}")
         }
-        val initialSelection = pizzaListItem.ingredientIds.associateWith { true }
         return PizzaDetails(
             pizzaListItem.name,
             pizzaListItem.imgUrl,
             ingredientList,
-            initialSelection,
-            price
+            pizzaListItem.ingredientIds
         )
     }
 }

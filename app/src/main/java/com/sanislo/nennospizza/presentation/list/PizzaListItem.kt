@@ -5,5 +5,5 @@ data class PizzaListItem(
     val ingredients: String,
     val price: String,
     val imgUrl: String?,
-    val ingredientIds: List<Int>
+    val ingredientIds: Set<Int>
 )

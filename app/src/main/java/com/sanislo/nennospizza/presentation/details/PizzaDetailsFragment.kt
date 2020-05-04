@@ -18,8 +18,8 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     private val viewModel: MainViewModel by sharedViewModel()
     private val pizzaImageLoader: PizzaImageLoader by inject()
     private val ingredientsAdapter = IngredientsAdapter(object : IngredientsAdapter.ClickHandler {
-        override fun onSelectionChanged(ingredientId: Int, isSelected: Boolean) {
-            viewModel.onIngredientSelected(ingredientId, isSelected)
+        override fun onSelectionChanged(selection: Set<Int>) {
+            viewModel.onSelectionChanged(selection)
         }
     })
 
@@ -34,8 +34,15 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         rv_ingredients.adapter = ingredientsAdapter
         observePizzaDetails()
         add_to_cart.setOnClickListener {
-            viewModel.addPizzaToCart(ingredientsAdapter.selection)
+            viewModel.addPizzaToCart()
         }
+        viewModel.addToCartState.observe(viewLifecycleOwner, Observer {
+            if (it == null) return@Observer
+            add_to_cart.isEnabled = it.isEnabled
+            iv_cart.visibility = if (it.isEnabled) View.VISIBLE else View.GONE
+            tv_add_to_cart.text = if (it.isEnabled) getString(R.string.add_to_cart, it.price)
+                else getString(R.string.added_to_cart)
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -56,14 +63,8 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
                 layout_pizza_image.findViewById(R.id.iv_pizza),
                 it.imgUrl
             )
-            ingredientsAdapter.selection = it.initialSelection.toMutableMap()
+            ingredientsAdapter.selection = it.initialSelection.toMutableSet()
             ingredientsAdapter.submitList(it.ingredientList)
-            add_to_cart.isEnabled = it.isAddToCartEnabled
-            iv_cart.visibility = if (it.isAddToCartEnabled) View.VISIBLE else View.GONE
-            tv_add_to_cart.text =
-                if (it.isAddToCartEnabled) getString(R.string.add_to_cart, it.price) else getString(
-                    R.string.added_to_cart
-                )
         })
     }
 }

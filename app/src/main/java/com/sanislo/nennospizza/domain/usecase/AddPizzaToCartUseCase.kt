@@ -8,14 +8,15 @@ import java.util.*
 class AddPizzaToCartUseCase(private val pizzaCartDao: PizzaCartDao) {
 
     fun invoke(pizzaDetails: PizzaDetails,
-               selectedIngredients: Map<Int, Boolean>
+               //selectedIngredients: Map<Int, Boolean>
+               selectedIngredientIds: Set<Int>
     ) {
-        val selectedIngredientIds = selectedIngredients.filterValues { it }.keys
         return pizzaDetails.let {
             val pizzaCartItemEntity = PizzaCartItemEntity(
                 id = UUID.randomUUID().toString(),
                 name = it.name,
-                price = "$${it.price}",
+                    //todo
+                price = "$9999",
                 ingredientIds = selectedIngredientIds,
                 createdAt = Date())
             pizzaCartDao.insert(pizzaCartItemEntity)

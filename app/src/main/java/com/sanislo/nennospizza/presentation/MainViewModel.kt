@@ -21,6 +21,7 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
                     private val checkoutUseCase: CheckoutUseCase,
                     private val getDrinksUseCase: GetDrinksUseCase,
                     private val addDrinkToCartUseCase: AddDrinkToCartUseCase,
+                    private val getPizzaPriceUseCase: GetPizzaPriceUseCase,
                     cartUseCase: CartUseCase
 ) : ViewModel() {
     val pizzaList = MutableLiveData<List<PizzaListItem>>()
@@ -36,6 +37,21 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
 
     private val _pizzaDetails = MutableLiveData<PizzaDetails>()
     val pizzaDetails: LiveData<PizzaDetails> = _pizzaDetails
+
+    private val _ingredientSelection = MutableLiveData<Set<Int>>()
+    private val _addToCartEnabled = MutableLiveData(true)
+    private val _pizzaPrice: LiveData<Double> = _ingredientSelection.switchMap {
+        liveData(Dispatchers.IO) {
+            emit(getPizzaPriceUseCase.invoke(it))
+        }
+    }
+    private val _addToCartState = MediatorLiveData<AddToCartState>()
+    val addToCartState: LiveData<AddToCartState> = _addToCartState
+
+    data class AddToCartState(
+            val isEnabled: Boolean = true,
+            val price: Double = 0.0
+    )
 
     val cart: LiveData<Cart> = cartUseCase.invoke().asLiveData(Dispatchers.IO)
 
@@ -58,43 +74,43 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
                 _errors.postValue(Event(e))
             }
         }
+        _addToCartState.value = AddToCartState()
+        _addToCartState.addSource(_addToCartEnabled) {
+            _addToCartState.value = _addToCartState.value?.copy(isEnabled = it)
+        }
+        _addToCartState.addSource(_pizzaPrice) {
+            _addToCartState.value = _addToCartState.value?.copy(price = it)
+        }
     }
 
     fun onPizzaClick(pizzaListItem: PizzaListItem) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _pizzaDetails.postValue(getPizzaDetailsUseCase.invoke(pizzaListItem))
-                _navigateToPizzaDetailsEvent.postValue(
-                    Event(
-                        Unit
-                    )
-                )
+                val pizzaDetails = getPizzaDetailsUseCase.invoke(pizzaListItem)
+                _pizzaDetails.postValue(pizzaDetails)
+                _ingredientSelection.postValue(pizzaDetails.initialSelection)
+                _navigateToPizzaDetailsEvent.postValue(Event(Unit))
             } catch (e: Exception) {
                 _errors.postValue(Event(e))
             }
         }
     }
 
-    fun addPizzaToCart(selectedIngredients: Map<Int, Boolean>) {
+    fun addPizzaToCart() {
         viewModelScope.launch(Dispatchers.IO) {
-            _pizzaDetails.postValue(_pizzaDetails.value?.copy(isAddToCartEnabled = false))
+            _addToCartEnabled.postValue(false)
             delay(ADD_TO_CART_DELAY)
-            _pizzaDetails.postValue(_pizzaDetails.value?.copy(isAddToCartEnabled = true))
+            _addToCartEnabled.postValue(true)
         }
         viewModelScope.launch(Dispatchers.IO) {
             _pizzaDetails.value?.let {
-                addPizzaToCartUseCase.invoke(
-                    it,
-                    selectedIngredients
-                )
+                addPizzaToCartUseCase.invoke(it, _ingredientSelection.value ?: emptySet())
             }
         }
     }
 
-    fun onIngredientSelected(ingredientId: Int, isSelected: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _pizzaDetails.postValue(ingredientCheckUseCase.invoke(_pizzaDetails.value, ingredientId, isSelected))
-        }
+    fun onSelectionChanged(selection: Set<Int>) {
+        _ingredientSelection.value = selection
     }
 
     fun onRemoveCartItem(baseCartItem: BaseCartItem) {

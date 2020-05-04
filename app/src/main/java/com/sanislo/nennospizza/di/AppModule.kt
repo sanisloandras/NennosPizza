@@ -68,6 +68,7 @@ val appModule = module {
     factory { GetDrinksUseCase(get()) }
     factory { AddDrinkToCartUseCase(get(), get()) }
     factory { CartUseCase(get(), get()) }
+    factory { GetPizzaPriceUseCase(get(), get()) }
 }
 
 fun checkoutService(): CheckoutService {
@@ -86,5 +87,5 @@ fun getModules(): List<Module> {
 }
 
 val mainModule = module {
-    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 }

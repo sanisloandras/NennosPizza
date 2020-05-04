@@ -30,7 +30,7 @@ class IngredientsAdapter(val clickHandler: ClickHandler) : ListAdapter<Ingredien
 
     }).build()) {
 
-    var selection = mutableMapOf<Int, Boolean>()
+    var selection = mutableSetOf<Int>()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName = itemView.findViewById<TextView>(R.id.tv_name)
@@ -42,10 +42,10 @@ class IngredientsAdapter(val clickHandler: ClickHandler) : ListAdapter<Ingredien
                 tvName.text = name
                 tvPrice.text = price
                 cb.setOnCheckedChangeListener(null)
-                cb.isChecked = selection[id] ?: false
+                cb.isChecked = selection.contains(id)
                 cb.setOnCheckedChangeListener { _, isChecked ->
-                    selection[id] = isChecked
-                    clickHandler.onSelectionChanged(id, isChecked)
+                    if (isChecked) selection.add(id) else selection.remove(id)
+                    clickHandler.onSelectionChanged(selection)
                 }
             }
         }
@@ -60,6 +60,6 @@ class IngredientsAdapter(val clickHandler: ClickHandler) : ListAdapter<Ingredien
     }
 
     interface ClickHandler {
-        fun onSelectionChanged(ingredientId: Int, isSelected: Boolean)
+        fun onSelectionChanged(selection: Set<Int>)
     }
 }

@@ -6,7 +6,7 @@ import com.sanislo.nennospizza.presentation.details.PizzaDetails
 class IngredientCheckUseCase(private val ingredientsRepository: IngredientsRepository) {
 
     suspend fun invoke(pizzaDetails: PizzaDetails?, ingredientId: Int, isSelected: Boolean): PizzaDetails? {
-        return pizzaDetails?.let { pizzaDetails ->
+        return pizzaDetails/*?.let { pizzaDetails ->
             val selectedIngredients = pizzaDetails.initialSelection.toMutableMap()
             if (selectedIngredients[ingredientId] == isSelected) return pizzaDetails
             selectedIngredients[ingredientId] = isSelected
@@ -19,6 +19,6 @@ class IngredientCheckUseCase(private val ingredientsRepository: IngredientsRepos
                 initialSelection = selectedIngredients,
                 price = newPrice
             )
-        }
+        }*/
     }
 }
