@@ -5,7 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.MainViewModel
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
@@ -33,15 +33,16 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         setupToolbarForBack()
         rv_ingredients.adapter = ingredientsAdapter
         observePizzaDetails()
-        add_to_cart.setOnClickListener {
-            viewModel.addPizzaToCart()
-        }
-        viewModel.addToCartState.observe(viewLifecycleOwner, Observer {
-            if (it == null) return@Observer
+        add_to_cart.setOnClickListener { viewModel.addPizzaToCart() }
+        observeCartState()
+    }
+
+    private fun observeCartState() {
+        viewModel.addToCartState.observe(viewLifecycleOwner, {
             add_to_cart.isEnabled = it.isEnabled
             iv_cart.visibility = if (it.isEnabled) View.VISIBLE else View.GONE
             tv_add_to_cart.text = if (it.isEnabled) getString(R.string.add_to_cart, it.price)
-                else getString(R.string.added_to_cart)
+            else getString(R.string.added_to_cart)
         })
     }
 
@@ -56,7 +57,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     }
 
     private fun observePizzaDetails() {
-        viewModel.pizzaDetails.observe(viewLifecycleOwner, Observer {
+        viewModel.pizzaDetails.observe(viewLifecycleOwner, {
             (activity as? AppCompatActivity)?.supportActionBar?.title = it.name
             pizzaImageLoader.loadPizzaImage(
                 layout_pizza_image.findViewById(R.id.iv_wood),

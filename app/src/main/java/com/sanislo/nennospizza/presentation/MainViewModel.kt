@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.usecase.*
 import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
 import com.sanislo.nennospizza.presentation.cart.data.Cart
+import com.sanislo.nennospizza.presentation.details.AddToCartState
 import com.sanislo.nennospizza.presentation.details.PizzaDetails
 import com.sanislo.nennospizza.presentation.drinks.DrinkListItem
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
@@ -11,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
                     private val getPizzaDetailsUseCase: GetPizzaDetailsUseCase,
@@ -48,10 +48,7 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
     private val _addToCartState = MediatorLiveData<AddToCartState>()
     val addToCartState: LiveData<AddToCartState> = _addToCartState
 
-    data class AddToCartState(
-            val isEnabled: Boolean = true,
-            val price: Double = 0.0
-    )
+
 
     val cart: LiveData<Cart> = cartUseCase.invoke().asLiveData(Dispatchers.IO)
 
