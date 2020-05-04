@@ -25,6 +25,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        if (savedInstanceState == null) viewModel.setPizzaName(arguments?.getString(EXTRA_NAME))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,11 +69,30 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         })
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(EXTRA_NAME, arguments?.getString(EXTRA_NAME))
+        outState.putIntArray(EXTRA_SELECTION, ingredientsAdapter.selection.toIntArray())
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        savedInstanceState?.let {
+            viewModel.setPizzaName(savedInstanceState.getString(EXTRA_NAME))
+            val selection = savedInstanceState.getIntArray(EXTRA_SELECTION)?.toSet() ?: emptySet()
+            ingredientsAdapter.selection = selection.toMutableSet()
+            viewModel.onSelectionChanged(selection)
+        }
+    }
+
     companion object {
-        fun newInstance(pizzaDetails: PizzaDetails): PizzaDetailsFragment {
+        const val EXTRA_NAME = "EXTRA_NAME"
+        const val EXTRA_SELECTION = "EXTRA_SELECTION"
+
+        fun newInstance(pizzaName: String): PizzaDetailsFragment {
             return PizzaDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putP
+                    putString(EXTRA_NAME, pizzaName)
                 }
             }
         }

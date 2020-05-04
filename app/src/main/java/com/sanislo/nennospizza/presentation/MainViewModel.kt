@@ -4,8 +4,6 @@ import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.usecase.*
 import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
 import com.sanislo.nennospizza.presentation.cart.data.Cart
-import com.sanislo.nennospizza.presentation.details.AddToCartState
-import com.sanislo.nennospizza.presentation.details.PizzaDetails
 import com.sanislo.nennospizza.presentation.drinks.DrinkListItem
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +21,8 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
 ) : ViewModel() {
     val pizzaList = MutableLiveData<List<PizzaListItem>>()
 
-    private val _navigateToPizzaDetailsEvent = MutableLiveData<Event<PizzaDetails>>()
-    val navigateToPizzaDetailsEvent: LiveData<Event<PizzaDetails>> = _navigateToPizzaDetailsEvent
+    private val _navigateToPizzaDetailsEvent = MutableLiveData<Event<String>>()
+    val navigateToPizzaDetailsEvent: LiveData<Event<String>> = _navigateToPizzaDetailsEvent
 
     private val _navigateToCartEvent = MutableLiveData<Event<Unit>>()
     val navigateToCartEvent: LiveData<Event<Unit>> = _navigateToCartEvent
@@ -59,15 +57,12 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
     fun onPizzaClick(pizzaListItem: PizzaListItem) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val pizzaDetails = getPizzaDetailsUseCase.invoke(pizzaListItem)
-                _navigateToPizzaDetailsEvent.postValue(pizzaDetails)
+                _navigateToPizzaDetailsEvent.postValue(Event(pizzaListItem.name))
             } catch (e: Exception) {
                 _errors.postValue(Event(e))
             }
         }
     }
-
-
 
     fun onRemoveCartItem(baseCartItem: BaseCartItem) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -9,6 +9,7 @@ import com.sanislo.nennospizza.domain.usecase.*
 import com.sanislo.nennospizza.presentation.MainViewModel
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.PizzaImageLoaderImpl
+import com.sanislo.nennospizza.presentation.details.PizzaDetailsViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -36,32 +37,12 @@ val appModule = module {
     single { get<AppDb>().pizzaCartDao() }
     single { get<AppDb>().drinkCartDao() }
     single<PizzaImageLoader> { PizzaImageLoaderImpl(androidApplication()) }
-    factory<PizzaRepository> {
-        PizzaRepositoryImpl(
-            get()
-        )
-    }
-    factory<IngredientsRepository> {
-        IngredientsRepositoryImpl(
-            get()
-        )
-    }
-    factory<DrinksRepository> {
-        DrinksRepositoryImpl(get())
-    }
-    factory {
-        GetPizzaListUseCase(
-            get(),
-            get()
-        )
-    }
-    factory {
-        GetPizzaDetailsUseCase(
-            get(),
-            get()
-        )
-    }
-    factory { IngredientCheckUseCase(get()) }
+    factory<PizzaRepository> { PizzaRepositoryImpl(get()) }
+    factory<IngredientsRepository> { IngredientsRepositoryImpl(get()) }
+    factory<DrinksRepository> { DrinksRepositoryImpl(get()) }
+    factory { GetPizzaListUseCase(get(), get()) }
+    factory { GetPizzaDetailsUseCase(get()) }
+    factory { GetPizzaDetailsByNameUseCase(get(), get()) }
     factory { AddPizzaToCartUseCase(get()) }
     factory { RemoveFromCartUseCase(get(), get()) }
     factory { CheckoutUseCase(get(), get(), get()) }
@@ -83,9 +64,13 @@ fun checkoutRetrofit(): Retrofit {
 }
 
 fun getModules(): List<Module> {
-    return appModule + mainModule
+    return appModule + mainModule + pizzaDetailsModule
 }
 
 val mainModule = module {
-    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get()) }
+}
+
+val pizzaDetailsModule = module {
+    viewModel { PizzaDetailsViewModel(get(), get(), get()) }
 }

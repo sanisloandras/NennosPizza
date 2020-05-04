@@ -3,7 +3,6 @@ package com.sanislo.nennospizza
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.domain.repository.IngredientsRepositoryImpl
-import com.sanislo.nennospizza.domain.usecase.IngredientCheckUseCase
 import com.sanislo.nennospizza.presentation.details.IngredientListItem
 import com.sanislo.nennospizza.presentation.details.PizzaDetails
 import junit.framework.Assert.assertEquals
