@@ -33,6 +33,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         setupToolbarForBack()
         rv_ingredients.adapter = ingredientsAdapter
         observePizzaDetails()
+        observeIngredientList()
         add_to_cart.setOnClickListener { viewModel.addPizzaToCart() }
         observeCartState()
     }
@@ -65,7 +66,13 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
                 it.imgUrl
             )
             //ingredientsAdapter.selection = it.initialSelection.toMutableSet()
-            ingredientsAdapter.submitList(it.ingredientList)
+            //ingredientsAdapter.submitList(it.ingredientList)
+        })
+    }
+
+    private fun observeIngredientList() {
+        viewModel.ingredientList.observe(viewLifecycleOwner, {
+            ingredientsAdapter.submitList(it)
         })
     }
 

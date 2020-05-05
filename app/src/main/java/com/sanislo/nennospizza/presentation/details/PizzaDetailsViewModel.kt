@@ -2,6 +2,7 @@ package com.sanislo.nennospizza.presentation.details
 
 import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.usecase.AddPizzaToCartUseCase
+import com.sanislo.nennospizza.domain.usecase.GetIngredientsUseCase
 import com.sanislo.nennospizza.domain.usecase.GetPizzaDetailsByNameUseCase
 import com.sanislo.nennospizza.domain.usecase.GetPizzaPriceUseCase
 import com.sanislo.nennospizza.presentation.MainViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class PizzaDetailsViewModel(private val getPizzaPriceUseCase: GetPizzaPriceUseCase,
                             private val getPizzaDetailsByNameUseCase: GetPizzaDetailsByNameUseCase,
+                            private val getIngredientsUseCase: GetIngredientsUseCase,
                             private val addPizzaToCartUseCase: AddPizzaToCartUseCase): ViewModel() {
     private val _pizzaName = MutableLiveData<String>()
 
@@ -20,6 +22,10 @@ class PizzaDetailsViewModel(private val getPizzaPriceUseCase: GetPizzaPriceUseCa
         }
     }
     val pizzaDetails: LiveData<PizzaDetails> = _pizzaDetails
+
+    val ingredientList: LiveData<List<IngredientListItem>> = liveData(Dispatchers.IO) {
+        emit(getIngredientsUseCase.invoke())
+    }
 
     private val _ingredientSelection = MediatorLiveData<Set<Int>>()
 
@@ -41,9 +47,6 @@ class PizzaDetailsViewModel(private val getPizzaPriceUseCase: GetPizzaPriceUseCa
         }
         _addToCartState.addSource(_pizzaPrice) {
             _addToCartState.value = _addToCartState.value?.copy(price = it)
-        }
-        _ingredientSelection.addSource(_pizzaDetails) {
-            //todo
         }
     }
 
