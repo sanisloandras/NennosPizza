@@ -19,8 +19,7 @@ class GetPizzaDetailsByNameUseCase(
         return PizzaDetails(
                 pizza.name,
                 pizza.imageUrl,
-                ingredientList,
-                pizza.ingredients.toSet()
+                ingredientList
         )
     }
 }

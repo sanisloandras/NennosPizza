@@ -13,8 +13,7 @@ class GetPizzaDetailsUseCase(private val ingredientsRepository: IngredientsRepos
         return PizzaDetails(
             pizzaListItem.name,
             pizzaListItem.imgUrl,
-            ingredientList,
-            pizzaListItem.ingredientIds
+                ingredientList
         )
     }
 }

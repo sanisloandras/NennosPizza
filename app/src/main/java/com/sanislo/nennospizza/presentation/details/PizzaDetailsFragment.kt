@@ -64,7 +64,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
                 layout_pizza_image.findViewById(R.id.iv_pizza),
                 it.imgUrl
             )
-            ingredientsAdapter.selection = it.initialSelection.toMutableSet()
+            //ingredientsAdapter.selection = it.initialSelection.toMutableSet()
             ingredientsAdapter.submitList(it.ingredientList)
         })
     }

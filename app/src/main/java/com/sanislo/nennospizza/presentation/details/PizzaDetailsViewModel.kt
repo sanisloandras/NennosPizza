@@ -26,7 +26,7 @@ class PizzaDetailsViewModel(private val getPizzaPriceUseCase: GetPizzaPriceUseCa
     private val _addToCartState = MediatorLiveData<AddToCartState>()
     val addToCartState: LiveData<AddToCartState> = _addToCartState
 
-    private val _addToCartEnabled = MutableLiveData(false)
+    private val _addToCartEnabled = MutableLiveData(true)
 
     private val _pizzaPrice: LiveData<Double> = _ingredientSelection.switchMap {
         liveData(Dispatchers.IO) {
@@ -43,8 +43,7 @@ class PizzaDetailsViewModel(private val getPizzaPriceUseCase: GetPizzaPriceUseCa
             _addToCartState.value = _addToCartState.value?.copy(price = it)
         }
         _ingredientSelection.addSource(_pizzaDetails) {
-            if (_ingredientSelection.value != null) return@addSource
-            _ingredientSelection.value = it.initialSelection
+            //todo
         }
     }
 
