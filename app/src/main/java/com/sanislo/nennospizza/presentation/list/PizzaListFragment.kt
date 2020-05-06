@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,9 +17,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
     private val viewModel: MainViewModel by sharedViewModel()
     private val pizzaListAdapter =
-        PizzaListAdapter(object :
-            PizzaListAdapter.ClickHandler {
-            override fun onClick(pizzaListItem: PizzaListItem) {
+            PizzaListAdapter(object : PizzaListAdapter.ClickHandler {
+                override fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView) {
                 viewModel.onPizzaClick(pizzaListItem)
             }
         })

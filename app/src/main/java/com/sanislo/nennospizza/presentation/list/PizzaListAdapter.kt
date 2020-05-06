@@ -33,13 +33,11 @@ class PizzaListAdapter(val clickHandler: ClickHandler) : ListAdapter<PizzaListIt
             }
 
         }
-        val asyncDifferConfig = AsyncDifferConfig.Builder<PizzaListItem>(
-            diffCallback
-        ).build()
+        val asyncDifferConfig = AsyncDifferConfig.Builder(diffCallback).build()
     }
 
     interface ClickHandler {
-        fun onClick(pizzaListItem: PizzaListItem)
+        fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -50,7 +48,7 @@ class PizzaListAdapter(val clickHandler: ClickHandler) : ListAdapter<PizzaListIt
         private val tvPrice = itemView.findViewById<TextView>(R.id.tv_price)
 
         init {
-            itemView.setOnClickListener { clickHandler.onClick(getItem(adapterPosition)) }
+            itemView.setOnClickListener { clickHandler.onClick(getItem(adapterPosition), ivPizza) }
         }
 
         fun bind() {

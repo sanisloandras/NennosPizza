@@ -114,6 +114,6 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
 
     companion object {
         val TAG = MainViewModel::class.java.simpleName
-        const val ADD_TO_CART_DELAY = 3_000L
+        const val ADD_TO_CART_DELAY = 5_000L
     }
 }

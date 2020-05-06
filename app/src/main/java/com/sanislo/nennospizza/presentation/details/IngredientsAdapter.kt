@@ -45,7 +45,7 @@ class IngredientsAdapter(val clickHandler: ClickHandler) : ListAdapter<Ingredien
                 cb.isChecked = selection.contains(id)
                 cb.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) selection.add(id) else selection.remove(id)
-                    clickHandler.onSelectionChanged(selection)
+                    clickHandler.onSelectionChanged(id, isChecked)
                 }
             }
         }
@@ -59,11 +59,7 @@ class IngredientsAdapter(val clickHandler: ClickHandler) : ListAdapter<Ingredien
         holder.bind()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
-        super.onBindViewHolder(holder, position, payloads)
-    }
-
     interface ClickHandler {
-        fun onSelectionChanged(selection: Set<Int>)
+        fun onSelectionChanged(id: Int, isSelected: Boolean)
     }
 }
