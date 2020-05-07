@@ -18,8 +18,10 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
     private val viewModel: MainViewModel by sharedViewModel()
+
     private val pizzaListAdapter = PizzaListAdapter(object : PizzaListAdapter.ClickHandler {
         override fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView, adapterPosition: Int) {
+            iv = ivPizza
             viewModel.onPizzaClick(pizzaListItem, adapterPosition)
         }
     })
@@ -62,9 +64,12 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
         })
     }
 
+    private var iv: ImageView? = null
+
     private fun observeNavigateToPizzaDetails() {
         viewModel.navigateToPizzaDetailsEvent.observe(viewLifecycleOwner, EventObserver {
-            val ivPizza = (rv_pizza_list.findViewHolderForAdapterPosition(it.adapterPosition) as PizzaListAdapter.ViewHolder).ivPizza
+            //val ivPizza = (rv_pizza_list.findViewHolderForAdapterPosition(it.adapterPosition) as PizzaListAdapter.ViewHolder).ivPizza
+            val ivPizza = iv!!
             val transitionName = ivPizza.transitionName
             requireActivity().supportFragmentManager
                     .beginTransaction()

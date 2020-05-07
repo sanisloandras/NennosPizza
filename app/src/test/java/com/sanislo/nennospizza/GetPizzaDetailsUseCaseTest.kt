@@ -5,8 +5,8 @@ import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.domain.repository.IngredientsRepositoryImpl
 import com.sanislo.nennospizza.domain.repository.PizzaRepositoryImpl
 import com.sanislo.nennospizza.domain.usecase.GetPizzaDetailsUseCase
-import com.sanislo.nennospizza.presentation.details.IngredientListItem
 import com.sanislo.nennospizza.presentation.details.PizzaDetails
+import com.sanislo.nennospizza.presentation.details.list.IngredientItemItem
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
@@ -40,16 +40,16 @@ class GetPizzaDetailsUseCaseTest {
 
     private fun expected(): PizzaDetails {
         val ingredientsListItems = listOf(
-            IngredientListItem(1, "Mozzarella", "$1.0"),
-            IngredientListItem(2, "Tomato Sauce", "$0.5"),
-            IngredientListItem(3, "Salami", "$1.5"),
-            IngredientListItem(4, "Mushrooms", "$2.0"),
-            IngredientListItem(5, "Ricci", "$4.0"),
-            IngredientListItem(6, "Asparagus", "$2.0"),
-            IngredientListItem(7, "Pineapple", "$1.0"),
-            IngredientListItem(8, "Speck", "$3.0"),
-            IngredientListItem(9, "Bottarga", "$2.5"),
-            IngredientListItem(10, "Tuna", "$2.2")
+                IngredientItemItem(1, "Mozzarella", "$1.0"),
+                IngredientItemItem(2, "Tomato Sauce", "$0.5"),
+                IngredientItemItem(3, "Salami", "$1.5"),
+                IngredientItemItem(4, "Mushrooms", "$2.0"),
+                IngredientItemItem(5, "Ricci", "$4.0"),
+                IngredientItemItem(6, "Asparagus", "$2.0"),
+                IngredientItemItem(7, "Pineapple", "$1.0"),
+                IngredientItemItem(8, "Speck", "$3.0"),
+                IngredientItemItem(9, "Bottarga", "$2.5"),
+                IngredientItemItem(10, "Tuna", "$2.2")
         )
         return PizzaDetails(
             "Boscaiola",
