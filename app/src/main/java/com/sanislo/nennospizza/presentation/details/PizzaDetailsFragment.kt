@@ -6,18 +6,16 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.transition.TransitionInflater
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
-import com.sanislo.nennospizza.presentation.details.list.IngredientItem
 import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsAdapter
-import com.sanislo.nennospizza.presentation.details.list.PizzaImageItem
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_pizza_details.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -36,7 +34,6 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         override fun pizzaImageLoaded() {
             d(TAG, "startPostponedEnterTransition")
             lifecycleScope.launch {
-                delay(200)
                 startPostponedEnterTransition()
             }
         }
@@ -48,8 +45,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         setHasOptionsMenu(true)
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         pizzaDetailsInput = arguments?.getParcelable(EXTRA_INPUT)!!
-        //if (savedInstanceState == null) viewModel.setPizzaName(arguments?.getString(EXTRA_NAME))
-        if (savedInstanceState == null) viewModel.setPizzaName(pizzaDetailsInput.pizzaName)
+        if (savedInstanceState == null) viewModel.pizzaDetailsInput.value = pizzaDetailsInput
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,38 +57,24 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         super.onViewCreated(view, savedInstanceState)
         d(TAG, "onViewCreated")
         setupToolbarForBack()
-        //iv_pizza.transitionName = getString(R.string.pizza_details_transition, pizzaDetailsInput.adapterPosition)
-
         rv.adapter = adapter
-        adapter.submitList(listOf(PizzaImageItem("https://doclerlabs.github.io/mobile-native-challenge/images/pizza_PNG44092.png"),
-                IngredientItem(1, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0"),
-                IngredientItem(2, "mock", "$1.0")
-        ))
-        //observeIngredientListState()
+        viewModel.pizzaName.observe(viewLifecycleOwner, Observer {
+            (activity as? AppCompatActivity)?.supportActionBar?.title = it
+        })
+        viewModel.pizzaDetailsState.observe(viewLifecycleOwner, Observer {
+            adapter.selection = it.selection.toMutableSet()
+            adapter.submitList(it.list)
+        })
         observeCartState()
         add_to_cart.setOnClickListener { viewModel.addPizzaToCart(adapter.selection) }
     }
 
     private fun observeCartState() {
-        viewModel.addToCartState.observe(viewLifecycleOwner, {
+        viewModel.addToCartState.observe(viewLifecycleOwner, Observer {
             if (!it.isLoaded) {
                 add_to_cart.isEnabled = false
                 tv_add_to_cart.text = getString(R.string.add_to_cart, it.price)
-                return@observe
+                return@Observer
             }
             add_to_cart.isEnabled = it.isEnabled
             iv_cart.visibility = if (it.isEnabled) View.VISIBLE else View.GONE
@@ -111,56 +93,25 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         }
     }
 
-    /*private fun observePizzaDetails() {
-        viewModel.pizzaDetails.observe(viewLifecycleOwner, {
-            (activity as? AppCompatActivity)?.supportActionBar?.title = it.name
-            pizzaImageLoader.loadPizzaImage(
-                layout_pizza_image.findViewById(R.id.iv_wood),
-                layout_pizza_image.findViewById(R.id.iv_pizza),
-                    it.imgUrl, object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    startPostponedEnterTransition()
-                    return false
-                }
-
-            }
-            )
-        })
-    }*/
-
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(EXTRA_NAME, arguments?.getString(EXTRA_NAME))
         outState.putIntArray(EXTRA_SELECTION, adapter.selection.toIntArray())
         super.onSaveInstanceState(outState)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    /*override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         savedInstanceState?.let {
             val pizzaName = savedInstanceState.getString(EXTRA_NAME)
             val selection = savedInstanceState.getIntArray(EXTRA_SELECTION)?.toSet() ?: emptySet()
             viewModel.restoreState(pizzaName, selection)
         }
-    }
+    }*/
 
     companion object {
-        const val EXTRA_NAME = "EXTRA_NAME"
         const val EXTRA_INPUT = "EXTRA_INPUT"
         const val EXTRA_SELECTION = "EXTRA_SELECTION"
 
         val TAG = PizzaDetailsFragment::class.java.simpleName
-
-        /*fun newInstance(pizzaName: String): PizzaDetailsFragment {
-            return PizzaDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(EXTRA_NAME, pizzaName)
-                }
-            }
-        }*/
 
         fun newInstance(pizzaDetailsInput: PizzaDetailsInput): PizzaDetailsFragment {
             return PizzaDetailsFragment().apply {

@@ -73,5 +73,5 @@ val mainModule = module {
 }
 
 val pizzaDetailsModule = module {
-    viewModel { PizzaDetailsViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { PizzaDetailsViewModel(get(), get()) }
 }
