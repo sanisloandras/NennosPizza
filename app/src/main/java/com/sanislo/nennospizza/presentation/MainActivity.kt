@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.cart.CartFragment
-import com.sanislo.nennospizza.presentation.details.PizzaDetailsFragment
 import com.sanislo.nennospizza.presentation.drinks.DrinkListFragment
 import com.sanislo.nennospizza.presentation.list.PizzaListFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) addPizzaListFragment()
-        observeNavigateToPizzaDetails()
         observeNavigateToCart()
         observeNavigateToDrinks()
         observeErrors()
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.navigateToDrinksEvent.observe(this, EventObserver {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fl_fragment_container, DrinkListFragment())
-                    .addToBackStack("drinks")
+                    .addToBackStack(null)
                     .commit()
         })
     }
@@ -53,15 +51,6 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fl_fragment_container, CartFragment())
                 .addToBackStack("cart")
-                .commit()
-        })
-    }
-
-    private fun observeNavigateToPizzaDetails() {
-        viewModel.navigateToPizzaDetailsEvent.observe(this, EventObserver {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.fl_fragment_container, PizzaDetailsFragment.newInstance(it))
-                .addToBackStack("details")
                 .commit()
         })
     }

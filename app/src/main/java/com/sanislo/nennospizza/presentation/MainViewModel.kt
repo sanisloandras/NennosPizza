@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.usecase.*
 import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
 import com.sanislo.nennospizza.presentation.cart.data.Cart
+import com.sanislo.nennospizza.presentation.details.PizzaDetailsInput
 import com.sanislo.nennospizza.presentation.drinks.DrinkListItem
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +22,8 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
 ) : ViewModel() {
     val pizzaList = MutableLiveData<List<PizzaListItem>>()
 
-    private val _navigateToPizzaDetailsEvent = MutableLiveData<Event<String>>()
-    val navigateToPizzaDetailsEvent: LiveData<Event<String>> = _navigateToPizzaDetailsEvent
+    private val _navigateToPizzaDetailsEvent = MutableLiveData<Event<PizzaDetailsInput>>()
+    val navigateToPizzaDetailsEvent: LiveData<Event<PizzaDetailsInput>> = _navigateToPizzaDetailsEvent
 
     private val _navigateToCartEvent = MutableLiveData<Event<Unit>>()
     val navigateToCartEvent: LiveData<Event<Unit>> = _navigateToCartEvent
@@ -54,14 +55,9 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
 
     }
 
-    fun onPizzaClick(pizzaListItem: PizzaListItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _navigateToPizzaDetailsEvent.postValue(Event(pizzaListItem.name))
-            } catch (e: Exception) {
-                _errors.postValue(Event(e))
-            }
-        }
+    //todo thinking if the view model should handle navigation... right now there is no benefit
+    fun onPizzaClick(pizzaListItem: PizzaListItem, adapterPosition: Int) {
+        _navigateToPizzaDetailsEvent.value = Event(PizzaDetailsInput(pizzaListItem.name, pizzaListItem.imgUrl, adapterPosition))
     }
 
     fun onRemoveCartItem(baseCartItem: BaseCartItem) {

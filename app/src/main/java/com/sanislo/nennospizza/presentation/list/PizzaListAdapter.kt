@@ -37,21 +37,22 @@ class PizzaListAdapter(val clickHandler: ClickHandler) : ListAdapter<PizzaListIt
     }
 
     interface ClickHandler {
-        fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView)
+        fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView, adapterPosition: Int)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivWood = itemView.findViewById<ImageView>(R.id.iv_wood)
-        private val ivPizza = itemView.findViewById<ImageView>(R.id.iv_pizza)
+        val ivPizza = itemView.findViewById<ImageView>(R.id.iv_pizza)
         private val tvName = itemView.findViewById<TextView>(R.id.tv_name)
         private val tvIngredients = itemView.findViewById<TextView>(R.id.tv_ingredients)
         private val tvPrice = itemView.findViewById<TextView>(R.id.tv_price)
 
         init {
-            itemView.setOnClickListener { clickHandler.onClick(getItem(adapterPosition), ivPizza) }
+            itemView.setOnClickListener { clickHandler.onClick(getItem(adapterPosition), ivPizza, adapterPosition) }
         }
 
         fun bind() {
+            ivPizza.transitionName = itemView.context.getString(R.string.pizza_details_transition, adapterPosition)
             getItem(adapterPosition).run {
                 pizzaImageLoader.loadPizzaImage(ivWood, ivPizza, imgUrl)
                 tvName.text = name

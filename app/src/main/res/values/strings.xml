@@ -8,4 +8,6 @@
     <string name="checkout">Checkout ($%.1f)</string>
     <string name="empty_cart">Your cart is empty :/</string>
     <string name="drinks">Drinks</string>
+
+    <string name="pizza_details_transition">pizza_details_transition_%d</string>
 </resources>
