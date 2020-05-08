@@ -77,7 +77,8 @@ class PizzaDetailsAdapter(val clickHandler: PizzaDetailsAdapter.ClickHandler,
                         imageUrl,
                         object : RequestListener<Drawable> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                                TODO("Not yet implemented")
+                                pizzaImageLoadedCallback.pizzaImageLoaded()
+                                return false
                             }
 
                             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: com.bumptech.glide.load.DataSource?, isFirstResource: Boolean): Boolean {

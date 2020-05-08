@@ -1,6 +1,7 @@
 package com.sanislo.nennospizza.presentation.details
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -10,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.transition.TransitionInflater
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsAdapter
@@ -43,13 +43,14 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         pizzaDetailsInput = arguments?.getParcelable(EXTRA_INPUT)!!
         if (savedInstanceState == null) viewModel.pizzaDetailsInput.value = pizzaDetailsInput
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        postponeEnterTransition()
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(R.transition.image_shared_element_transition)
+        // Avoid a postponeEnterTransition on orientation change, and postpone only of first creation.
+        if (savedInstanceState == null) postponeEnterTransition()
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
