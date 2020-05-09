@@ -13,7 +13,8 @@ abstract class BasePizzaDetailsItem {
 }
 
 class PizzaImageItem(
-        val imageUrl: String?
+        val imageUrl: String?,
+        val transitionName: String
 ) : BasePizzaDetailsItem()
 
 class IngredientItem(

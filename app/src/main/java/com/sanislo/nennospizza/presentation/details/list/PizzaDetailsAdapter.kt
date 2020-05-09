@@ -17,7 +17,7 @@ import com.bumptech.glide.request.target.Target
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 
-class PizzaDetailsAdapter(val clickHandler: PizzaDetailsAdapter.ClickHandler,
+class PizzaDetailsAdapter(val clickHandler: ClickHandler,
                           val pizzaImageLoadedCallback: PizzaImageLoadedCallback,
                           val pizzaImageLoader: PizzaImageLoader) : ListAdapter<BasePizzaDetailsItem, PizzaDetailsAdapter.BaseViewHolder>(asyncDifferConfig) {
     companion object {
@@ -69,8 +69,8 @@ class PizzaDetailsAdapter(val clickHandler: PizzaDetailsAdapter.ClickHandler,
 
         override fun bind() {
             super.bind()
-            ivPizza.transitionName = itemView.context.getString(R.string.pizza_details_transition, 1)
             (getItem(adapterPosition) as PizzaImageItem).run {
+                ivPizza.transitionName = transitionName
                 pizzaImageLoader.loadPizzaImage(
                         ivWood,
                         ivPizza,

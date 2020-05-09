@@ -1,6 +1,7 @@
 package com.sanislo.nennospizza.presentation.details
 
 import android.os.Bundle
+import android.transition.Fade
 import android.transition.TransitionInflater
 import android.util.Log.d
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsAdapter
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_pizza_details.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,9 +35,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     }, object : PizzaDetailsAdapter.PizzaImageLoadedCallback {
         override fun pizzaImageLoaded() {
             d(TAG, "startPostponedEnterTransition")
-            lifecycleScope.launch {
-                startPostponedEnterTransition()
-            }
+            startPostponedEnterTransition()
         }
 
     }, pizzaImageLoader)
@@ -43,8 +43,18 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        temp()
         pizzaDetailsInput = arguments?.getParcelable(EXTRA_INPUT)!!
         if (savedInstanceState == null) viewModel.pizzaDetailsInput.value = pizzaDetailsInput
+    }
+
+    private fun temp() {
+        val fade = Fade()
+        fade.excludeTarget(resources.getIdentifier("action_bar_container", "id", "android"), true)
+        fade.excludeTarget(android.R.id.statusBarBackground, true)
+        fade.excludeTarget(android.R.id.navigationBarBackground, true)
+        enterTransition = fade
+        exitTransition = fade
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,15 +69,20 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         d(TAG, "onViewCreated")
         setupToolbarForBack()
         rv.adapter = adapter
-        viewModel.pizzaName.observe(viewLifecycleOwner, Observer {
-            (activity as? AppCompatActivity)?.supportActionBar?.title = it
-        })
         viewModel.pizzaDetailsState.observe(viewLifecycleOwner, Observer {
             adapter.selection = it.selection.toMutableSet()
             adapter.submitList(it.list)
         })
         observeCartState()
         add_to_cart.setOnClickListener { viewModel.addPizzaToCart(adapter.selection) }
+        //todo fix this
+        lifecycleScope.launch {
+            delay(1000)
+            setupToolbarForBack()
+            viewModel.pizzaName.observe(viewLifecycleOwner, Observer {
+                (activity as? AppCompatActivity)?.supportActionBar?.title = it
+            })
+        }
     }
 
     private fun observeCartState() {

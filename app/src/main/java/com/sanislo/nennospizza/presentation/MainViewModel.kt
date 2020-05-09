@@ -13,17 +13,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
-                    private val getPizzaDetailsUseCase: GetPizzaDetailsUseCase,
                     private val removeFromFromCartUseCase: RemoveFromCartUseCase,
                     private val checkoutUseCase: CheckoutUseCase,
                     private val getDrinksUseCase: GetDrinksUseCase,
                     private val addDrinkToCartUseCase: AddDrinkToCartUseCase,
+                    private val getTransitionNameUseCase: GetTransitionNameUseCase,
                     cartUseCase: CartUseCase
 ) : ViewModel() {
     val pizzaList = MutableLiveData<List<PizzaListItem>>()
 
-    private val _navigateToPizzaDetailsEvent = MutableLiveData<Event<PizzaDetailsInput>>()
-    val navigateToPizzaDetailsEvent: LiveData<Event<PizzaDetailsInput>> = _navigateToPizzaDetailsEvent
+    private val _navigateToPizzaDetailsEvent = MutableLiveData<Event<Pair<Int, PizzaDetailsInput>>>()
+    val navigateToPizzaDetailsEvent: LiveData<Event<Pair<Int, PizzaDetailsInput>>> = _navigateToPizzaDetailsEvent
 
     private val _navigateToCartEvent = MutableLiveData<Event<Unit>>()
     val navigateToCartEvent: LiveData<Event<Unit>> = _navigateToCartEvent
@@ -55,9 +55,10 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
 
     }
 
-    //todo thinking if the view model should handle navigation... right now there is no benefit
     fun onPizzaClick(pizzaListItem: PizzaListItem, adapterPosition: Int) {
-        _navigateToPizzaDetailsEvent.value = Event(PizzaDetailsInput(pizzaListItem.name, pizzaListItem.imgUrl, adapterPosition))
+        val transitionName = getTransitionNameUseCase.invoke(adapterPosition)
+        val pizzaDetailsInput = PizzaDetailsInput(pizzaListItem.name, pizzaListItem.imgUrl, transitionName)
+        _navigateToPizzaDetailsEvent.value = Event(adapterPosition to pizzaDetailsInput)
     }
 
     fun onRemoveCartItem(baseCartItem: BaseCartItem) {

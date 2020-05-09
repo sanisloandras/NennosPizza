@@ -1,6 +1,7 @@
 package com.sanislo.nennospizza.presentation.list
 
 import android.os.Bundle
+import android.transition.Fade
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,12 +17,12 @@ import com.sanislo.nennospizza.presentation.details.PizzaDetailsFragment
 import kotlinx.android.synthetic.main.fragment_pizza_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
+
 class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
     private val viewModel: MainViewModel by sharedViewModel()
 
     private val pizzaListAdapter = PizzaListAdapter(object : PizzaListAdapter.ClickHandler {
         override fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView, adapterPosition: Int) {
-            iv = ivPizza
             viewModel.onPizzaClick(pizzaListItem, adapterPosition)
         }
     })
@@ -35,6 +36,16 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        temp()
+    }
+
+    private fun temp() {
+        val fade = Fade()
+        fade.excludeTarget(resources.getIdentifier("action_bar_container", "id", "android"), true)
+        fade.excludeTarget(android.R.id.statusBarBackground, true)
+        fade.excludeTarget(android.R.id.navigationBarBackground, true)
+        enterTransition = fade
+        exitTransition = fade
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,19 +75,16 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
         })
     }
 
-    private var iv: ImageView? = null
-
     private fun observeNavigateToPizzaDetails() {
-        viewModel.navigateToPizzaDetailsEvent.observe(viewLifecycleOwner, EventObserver {
-            //val ivPizza = (rv_pizza_list.findViewHolderForAdapterPosition(it.adapterPosition) as PizzaListAdapter.ViewHolder).ivPizza
-            val ivPizza = iv!!
+        viewModel.navigateToPizzaDetailsEvent.observe(viewLifecycleOwner, EventObserver { (adapterPosition, pizzaDetailsInput) ->
+            val ivPizza = (rv_pizza_list.findViewHolderForAdapterPosition(adapterPosition) as PizzaListAdapter.ViewHolder).ivPizza
             val transitionName = ivPizza.transitionName
             requireActivity().supportFragmentManager
                     .beginTransaction()
                     .setReorderingAllowed(true)
                     .addSharedElement(ivPizza, transitionName)
                     .addToBackStack(null)
-                    .replace(R.id.fl_fragment_container, PizzaDetailsFragment.newInstance(it))
+                    .replace(R.id.fl_fragment_container, PizzaDetailsFragment.newInstance(pizzaDetailsInput))
                     .commit()
         })
     }

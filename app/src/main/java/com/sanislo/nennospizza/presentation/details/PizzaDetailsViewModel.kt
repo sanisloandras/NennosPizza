@@ -82,7 +82,7 @@ public class PizzaDetailsViewModel(
             }
         }
         val pizzaDetailsList = mutableListOf<BasePizzaDetailsItem>()
-        pizzaDetailsList.add(PizzaImageItem(input.imgUrl))
+        pizzaDetailsList.add(PizzaImageItem(input.imgUrl, input.transitionName))
         pizzaDetailsList.addAll(ingredientItems)
         return PizzaDetailsState(pizzaDetailsList, selection, initialPrice)
     }

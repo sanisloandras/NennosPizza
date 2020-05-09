@@ -37,11 +37,10 @@ val appModule = module {
     single { get<AppDb>().pizzaCartDao() }
     single { get<AppDb>().drinkCartDao() }
     single<PizzaImageLoader> { PizzaImageLoaderImpl(androidApplication()) }
-    factory<PizzaRepository> { PizzaRepositoryImpl(get()) }
-    factory<IngredientsRepository> { IngredientsRepositoryImpl(get()) }
-    factory<DrinksRepository> { DrinksRepositoryImpl(get()) }
+    single<PizzaRepository> { PizzaRepositoryImpl(get()) }
+    single<IngredientsRepository> { IngredientsRepositoryImpl(get()) }
+    single<DrinksRepository> { DrinksRepositoryImpl(get()) }
     factory { GetPizzaListUseCase(get(), get()) }
-    factory { GetPizzaDetailsUseCase(get()) }
     factory { GetPizzaDetailsByNameUseCase(get(), get()) }
     factory { AddPizzaToCartUseCase(get()) }
     factory { RemoveFromCartUseCase(get(), get()) }
@@ -50,7 +49,7 @@ val appModule = module {
     factory { AddDrinkToCartUseCase(get(), get()) }
     factory { CartUseCase(get(), get()) }
     factory { GetPizzaPriceUseCase(get(), get()) }
-    factory { GetIngredientsUseCase(get()) }
+    factory { GetTransitionNameUseCase(androidApplication()) }
 }
 
 fun checkoutService(): CheckoutService {

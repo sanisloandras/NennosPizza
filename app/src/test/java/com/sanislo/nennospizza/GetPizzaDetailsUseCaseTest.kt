@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.domain.repository.IngredientsRepositoryImpl
 import com.sanislo.nennospizza.domain.repository.PizzaRepositoryImpl
-import com.sanislo.nennospizza.domain.usecase.GetPizzaDetailsUseCase
 import com.sanislo.nennospizza.presentation.details.PizzaDetails
 import com.sanislo.nennospizza.presentation.details.list.IngredientItemItem
 import com.sanislo.nennospizza.presentation.list.PizzaListItem

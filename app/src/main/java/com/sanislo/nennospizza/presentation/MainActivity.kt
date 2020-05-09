@@ -1,6 +1,7 @@
 package com.sanislo.nennospizza.presentation
 
 import android.os.Bundle
+import android.transition.Fade
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sanislo.nennospizza.R
@@ -19,6 +20,16 @@ class MainActivity : AppCompatActivity() {
         observeNavigateToCart()
         observeNavigateToDrinks()
         observeErrors()
+        temp()
+    }
+
+    private fun temp() {
+        val fade = Fade()
+        fade.excludeTarget(resources.getIdentifier("action_bar_container", "id", "android"), true)
+        fade.excludeTarget(android.R.id.statusBarBackground, true)
+        fade.excludeTarget(android.R.id.navigationBarBackground, true)
+        window.enterTransition = fade
+        window.exitTransition = fade
     }
 
     private fun observeErrors() {
