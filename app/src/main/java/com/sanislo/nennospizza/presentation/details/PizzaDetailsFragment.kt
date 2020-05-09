@@ -44,8 +44,6 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         temp()
-        pizzaDetailsInput = arguments?.getParcelable(EXTRA_INPUT)!!
-        if (savedInstanceState == null) viewModel.pizzaDetailsInput.value = pizzaDetailsInput
     }
 
     private fun temp() {
@@ -69,13 +67,14 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         d(TAG, "onViewCreated")
         setupToolbarForBack()
         rv.adapter = adapter
-        viewModel.pizzaDetailsState.observe(viewLifecycleOwner, Observer {
-            adapter.selection = it.selection.toMutableSet()
-            adapter.submitList(it.list)
-        })
+        observePizzaDetailsState()
         observeCartState()
-        add_to_cart.setOnClickListener { viewModel.addPizzaToCart(adapter.selection) }
+        add_to_cart.setOnClickListener { viewModel.addPizzaToCart() }
         //todo fix this
+        observePizzaName()
+    }
+
+    private fun observePizzaName() {
         lifecycleScope.launch {
             delay(1000)
             setupToolbarForBack()
@@ -83,6 +82,13 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
                 (activity as? AppCompatActivity)?.supportActionBar?.title = it
             })
         }
+    }
+
+    private fun observePizzaDetailsState() {
+        viewModel.pizzaDetailsState.observe(viewLifecycleOwner, Observer {
+            adapter.selection = it.selection.toMutableSet()
+            adapter.submitList(it.list)
+        })
     }
 
     private fun observeCartState() {
@@ -110,18 +116,22 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(EXTRA_INPUT, pizzaDetailsInput)
         outState.putIntArray(EXTRA_SELECTION, adapter.selection.toIntArray())
         super.onSaveInstanceState(outState)
     }
 
-    /*override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        savedInstanceState?.let {
-            val pizzaName = savedInstanceState.getString(EXTRA_NAME)
-            val selection = savedInstanceState.getIntArray(EXTRA_SELECTION)?.toSet() ?: emptySet()
-            viewModel.restoreState(pizzaName, selection)
+        if (savedInstanceState == null) {
+            pizzaDetailsInput = arguments?.getParcelable(EXTRA_INPUT)!!
+            viewModel.pizzaDetailsInput.value = pizzaDetailsInput
+        } else {
+            pizzaDetailsInput = savedInstanceState.getParcelable(EXTRA_INPUT)!!
+            val selection = savedInstanceState.getIntArray(EXTRA_SELECTION)?.toSet()
+            viewModel.restoreState(pizzaDetailsInput, selection)
         }
-    }*/
+    }
 
     companion object {
         const val EXTRA_INPUT = "EXTRA_INPUT"

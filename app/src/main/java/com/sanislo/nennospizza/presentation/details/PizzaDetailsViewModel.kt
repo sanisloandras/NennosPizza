@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.repository.IngredientsRepository
 import com.sanislo.nennospizza.domain.repository.PizzaRepository
 import com.sanislo.nennospizza.presentation.MainViewModel
-import com.sanislo.nennospizza.presentation.details.*
 import com.sanislo.nennospizza.presentation.details.list.BasePizzaDetailsItem
 import com.sanislo.nennospizza.presentation.details.list.IngredientItem
 import com.sanislo.nennospizza.presentation.details.list.PizzaImageItem
@@ -14,22 +13,23 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-public class PizzaDetailsViewModel(
+class PizzaDetailsViewModel(
         private val pizzaRepository: PizzaRepository,
         private val ingredientsRepository: IngredientsRepository) : ViewModel() {
 
     val pizzaDetailsInput = MutableLiveData<PizzaDetailsInput>()
     private val userIngredientSelection = MutableLiveData<Set<Int>?>()
+
     private val inputData = MediatorLiveData<Pair<PizzaDetailsInput, Set<Int>?>>()
     private val inputDataDelayed = inputData.asFlow().onStart { delay(100) }.asLiveData(Dispatchers.IO)
+
+    val pizzaName = pizzaDetailsInput.map { it.pizzaName }
 
     val pizzaDetailsState: LiveData<PizzaDetailsState> = inputDataDelayed.switchMap { (pizzaDetailsInput, userIngSelection) ->
         liveData {
             emit(getPizzaDetailsState(pizzaDetailsInput, userIngSelection))
         }
     }
-
-    val pizzaName = pizzaDetailsInput.map { it.pizzaName }
 
     private val _addToCartEnabled = MutableLiveData(false)
     private val _isPizzaLoaded = pizzaDetailsState.map { true }
@@ -87,32 +87,30 @@ public class PizzaDetailsViewModel(
         return PizzaDetailsState(pizzaDetailsList, selection, initialPrice)
     }
 
-    /*fun restoreState(pizzaName: String?, userIngredientSelection: Set<Int>) {
-        setPizzaName(pizzaName)
+    fun restoreState(pizzaDetailsInput: PizzaDetailsInput?, userIngredientSelection: Set<Int>?) {
+        this.pizzaDetailsInput.value = pizzaDetailsInput
         this.userIngredientSelection.value = userIngredientSelection
-    }*/
+    }
 
     fun onSelectionChanged(id: Int, isSelected: Boolean) {
         viewModelScope.launch {
             val ingredientPrice = ingredientsRepository.ingredients().first { it.id == id }.price
             val priceChange = if (isSelected) ingredientPrice else ingredientPrice * -1
             viewModelScope.launch(Dispatchers.Main) {
-                val addToCartState = _addToCartState.value?.let {
-                    it.copy(price = it.price + priceChange)
-                }
+                val addToCartState = _addToCartState.value?.let { it.copy(price = it.price + priceChange) }
                 _addToCartState.value = addToCartState
             }
         }
     }
 
-    fun addPizzaToCart(selection: Set<Int>) {
+    fun addPizzaToCart() {
         viewModelScope.launch(Dispatchers.IO) {
             _addToCartEnabled.postValue(false)
             delay(MainViewModel.ADD_TO_CART_DELAY)
             _addToCartEnabled.postValue(true)
         }
         viewModelScope.launch(Dispatchers.IO) {
-
+            //todo
         }
     }
 
