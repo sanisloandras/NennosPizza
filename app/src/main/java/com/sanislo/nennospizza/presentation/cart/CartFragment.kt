@@ -8,14 +8,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sanislo.nennospizza.R
-import com.sanislo.nennospizza.presentation.MainViewModel
+import com.sanislo.nennospizza.presentation.EventObserver
 import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
+import com.sanislo.nennospizza.presentation.drinks.DrinkListFragment
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_cart.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CartFragment : Fragment(R.layout.fragment_cart) {
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: CartViewModel by viewModel()
     private val cartListAdapter = CartListAdapter(object : CartListAdapter.ClickHandler {
         override fun onRemove(baseCartItem: BaseCartItem) {
             viewModel.onRemoveCartItem(baseCartItem)
@@ -32,6 +33,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         setupToolbarForBack(getString(R.string.cart))
         rv_cart.adapter = cartListAdapter
         observeCart()
+        observeNavigateToDrinks()
         tv_checkout.setOnClickListener { viewModel.checkout() }
     }
 
@@ -60,6 +62,15 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             tv_checkout.text = getString(R.string.checkout, it.price)
             tv_checkout.visibility = if (it.cartItems.isEmpty()) View.GONE else View.VISIBLE
             tv_empty_cart.visibility = if (it.cartItems.isEmpty()) View.VISIBLE else View.GONE
+        })
+    }
+
+    private fun observeNavigateToDrinks() {
+        viewModel.navigateToDrinksEvent.observe(viewLifecycleOwner, EventObserver {
+            requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fl_fragment_container, DrinkListFragment())
+                    .addToBackStack(null)
+                    .commit()
         })
     }
 }

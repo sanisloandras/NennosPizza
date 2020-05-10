@@ -9,7 +9,9 @@ import com.sanislo.nennospizza.domain.usecase.*
 import com.sanislo.nennospizza.presentation.MainViewModel
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.PizzaImageLoaderImpl
+import com.sanislo.nennospizza.presentation.cart.CartViewModel
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsViewModel
+import com.sanislo.nennospizza.presentation.drinks.DrinksViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -64,13 +66,21 @@ fun checkoutRetrofit(): Retrofit {
 }
 
 fun getModules(): List<Module> {
-    return appModule + mainModule + pizzaDetailsModule
+    return appModule + mainModule + pizzaDetailsModule + drinksModule + cartModule
 }
 
 val mainModule = module {
-    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { MainViewModel(get(), get()) }
 }
 
 val pizzaDetailsModule = module {
     viewModel { PizzaDetailsViewModel(get(), get()) }
+}
+
+val drinksModule = module {
+    viewModel { DrinksViewModel(get(), get()) }
+}
+
+val cartModule = module {
+    viewModel { CartViewModel(get(), get(), get()) }
 }

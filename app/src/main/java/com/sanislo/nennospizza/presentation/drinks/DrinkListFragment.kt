@@ -6,13 +6,13 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sanislo.nennospizza.R
-import com.sanislo.nennospizza.presentation.MainViewModel
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_drinks.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DrinkListFragment : Fragment(R.layout.fragment_drinks) {
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: DrinksViewModel by viewModel()
+
     private val drinkListAdapter = DrinkListAdapter(object : DrinkListAdapter.ClickHandler {
         override fun add(drinkListItem: DrinkListItem) {
             viewModel.addDrink(drinkListItem)
@@ -28,7 +28,6 @@ class DrinkListFragment : Fragment(R.layout.fragment_drinks) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbarForBack(getString(R.string.drinks))
         rv_drinks.adapter = drinkListAdapter
-        viewModel.loadDrinks()
         observeDrinks()
         observeAddedToCart()
     }
