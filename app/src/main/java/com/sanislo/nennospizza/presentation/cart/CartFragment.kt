@@ -30,7 +30,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbarForBack(getString(R.string.cart))
+        setupToolbarForBack(toolbar, getString(R.string.cart))
         rv_cart.adapter = cartListAdapter
         observeCart()
         observeNavigateToDrinks()

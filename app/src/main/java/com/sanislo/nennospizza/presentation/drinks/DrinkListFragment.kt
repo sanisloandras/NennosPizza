@@ -26,7 +26,7 @@ class DrinkListFragment : Fragment(R.layout.fragment_drinks) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbarForBack(getString(R.string.drinks))
+        setupToolbarForBack(toolbar, getString(R.string.drinks))
         rv_drinks.adapter = drinkListAdapter
         observeDrinks()
         observeAddedToCart()

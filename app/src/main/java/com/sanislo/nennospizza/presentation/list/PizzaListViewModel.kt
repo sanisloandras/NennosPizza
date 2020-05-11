@@ -1,4 +1,4 @@
-package com.sanislo.nennospizza.presentation
+package com.sanislo.nennospizza.presentation.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanislo.nennospizza.domain.usecase.GetPizzaListUseCase
 import com.sanislo.nennospizza.domain.usecase.GetTransitionNameUseCase
+import com.sanislo.nennospizza.presentation.Event
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsInput
-import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
-                    private val getTransitionNameUseCase: GetTransitionNameUseCase
+class PizzaListViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
+                         private val getTransitionNameUseCase: GetTransitionNameUseCase
 ) : ViewModel() {
     val pizzaList = MutableLiveData<List<PizzaListItem>>()
 
@@ -46,7 +46,7 @@ class MainViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
     }
 
     companion object {
-        val TAG = MainViewModel::class.java.simpleName
+        val TAG = PizzaListViewModel::class.java.simpleName
         const val ADD_TO_CART_DELAY = 5_000L
     }
 }

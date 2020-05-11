@@ -4,10 +4,10 @@ import android.util.Log.d
 import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.repository.IngredientsRepository
 import com.sanislo.nennospizza.domain.repository.PizzaRepository
-import com.sanislo.nennospizza.presentation.MainViewModel
 import com.sanislo.nennospizza.presentation.details.list.BasePizzaDetailsItem
 import com.sanislo.nennospizza.presentation.details.list.IngredientItem
 import com.sanislo.nennospizza.presentation.details.list.PizzaImageItem
+import com.sanislo.nennospizza.presentation.list.PizzaListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onStart
@@ -106,7 +106,7 @@ class PizzaDetailsViewModel(
     fun addPizzaToCart() {
         viewModelScope.launch(Dispatchers.IO) {
             _addToCartEnabled.postValue(false)
-            delay(MainViewModel.ADD_TO_CART_DELAY)
+            delay(PizzaListViewModel.ADD_TO_CART_DELAY)
             _addToCartEnabled.postValue(true)
         }
         viewModelScope.launch(Dispatchers.IO) {

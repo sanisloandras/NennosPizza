@@ -1,24 +1,19 @@
 package com.sanislo.nennospizza.presentation.details
 
 import android.os.Bundle
-import android.transition.Fade
 import android.transition.TransitionInflater
 import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsAdapter
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_pizza_details.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,16 +38,6 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        temp()
-    }
-
-    private fun temp() {
-        val fade = Fade()
-        fade.excludeTarget(resources.getIdentifier("action_bar_container", "id", "android"), true)
-        fade.excludeTarget(android.R.id.statusBarBackground, true)
-        fade.excludeTarget(android.R.id.navigationBarBackground, true)
-        enterTransition = fade
-        exitTransition = fade
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,24 +49,19 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        d(TAG, "onViewCreated")
-        setupToolbarForBack()
+        setupToolbarForBack(toolbar)
         rv.adapter = adapter
         observePizzaDetailsState()
         observeCartState()
         add_to_cart.setOnClickListener { viewModel.addPizzaToCart() }
-        //todo fix this
         observePizzaName()
     }
 
     private fun observePizzaName() {
-        lifecycleScope.launch {
-            delay(1000)
-            setupToolbarForBack()
-            viewModel.pizzaName.observe(viewLifecycleOwner, Observer {
-                (activity as? AppCompatActivity)?.supportActionBar?.title = it
-            })
-        }
+        viewModel.pizzaName.observe(viewLifecycleOwner, Observer {
+            //(activity as? AppCompatActivity)?.supportActionBar?.title = it
+            toolbar.title = it
+        })
     }
 
     private fun observePizzaDetailsState() {

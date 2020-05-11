@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanislo.nennospizza.domain.usecase.AddDrinkToCartUseCase
 import com.sanislo.nennospizza.domain.usecase.GetDrinksUseCase
-import com.sanislo.nennospizza.presentation.MainViewModel
+import com.sanislo.nennospizza.presentation.list.PizzaListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,7 +37,7 @@ class DrinksViewModel(
     private suspend fun drinkAddedToCartDelay(): Job {
         return viewModelScope.launch(Dispatchers.IO) {
             _drinkAddedToCart.postValue(true)
-            delay(MainViewModel.ADD_TO_CART_DELAY)
+            delay(PizzaListViewModel.ADD_TO_CART_DELAY)
             _drinkAddedToCart.postValue(false)
         }
     }

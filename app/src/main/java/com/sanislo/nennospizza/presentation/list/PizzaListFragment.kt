@@ -1,25 +1,24 @@
 package com.sanislo.nennospizza.presentation.list
 
 import android.os.Bundle
-import android.transition.Fade
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.EventObserver
-import com.sanislo.nennospizza.presentation.MainViewModel
+import com.sanislo.nennospizza.presentation.cart.CartFragment
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsFragment
 import kotlinx.android.synthetic.main.fragment_pizza_list.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
-    private val viewModel: MainViewModel by sharedViewModel()
+    private val viewModel: PizzaListViewModel by viewModel()
 
     private val pizzaListAdapter = PizzaListAdapter(object : PizzaListAdapter.ClickHandler {
         override fun onClick(pizzaListItem: PizzaListItem, ivPizza: ImageView, adapterPosition: Int) {
@@ -31,21 +30,13 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
         super.onActivityCreated(savedInstanceState)
         observePizzaList()
         observeNavigateToPizzaDetails()
+        observeNavigateToCart()
+        observeErrors()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        temp()
-    }
-
-    private fun temp() {
-        val fade = Fade()
-        fade.excludeTarget(resources.getIdentifier("action_bar_container", "id", "android"), true)
-        fade.excludeTarget(android.R.id.statusBarBackground, true)
-        fade.excludeTarget(android.R.id.navigationBarBackground, true)
-        enterTransition = fade
-        exitTransition = fade
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,6 +76,23 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
                     .addSharedElement(ivPizza, transitionName)
                     .addToBackStack(null)
                     .replace(R.id.fl_fragment_container, PizzaDetailsFragment.newInstance(pizzaDetailsInput))
+                    .commit()
+        })
+    }
+
+    private fun observeErrors() {
+        viewModel.errors.observe(viewLifecycleOwner, EventObserver { exception ->
+            Toast.makeText(requireContext(), exception.message
+                    ?: getString(R.string.unexpected_error), Toast.LENGTH_LONG).show()
+        })
+    }
+
+    private fun observeNavigateToCart() {
+        viewModel.navigateToCartEvent.observe(viewLifecycleOwner, EventObserver {
+            requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fl_fragment_container, CartFragment())
+                    .addToBackStack(null)
                     .commit()
         })
     }
