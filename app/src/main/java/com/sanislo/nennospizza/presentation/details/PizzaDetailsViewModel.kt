@@ -1,12 +1,10 @@
 package com.sanislo.nennospizza.presentation.details
 
-import android.util.Log.d
 import androidx.lifecycle.*
-import com.sanislo.nennospizza.domain.repository.IngredientsRepository
-import com.sanislo.nennospizza.domain.repository.PizzaRepository
+import com.sanislo.nennospizza.domain.usecase.AddPizzaToCartUseCase
+import com.sanislo.nennospizza.domain.usecase.GetPizzaDetailsUseCase
+import com.sanislo.nennospizza.domain.usecase.GetPizzaPriceChangeUseCase
 import com.sanislo.nennospizza.presentation.details.list.BasePizzaDetailsItem
-import com.sanislo.nennospizza.presentation.details.list.IngredientItem
-import com.sanislo.nennospizza.presentation.details.list.PizzaImageItem
 import com.sanislo.nennospizza.presentation.list.PizzaListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -14,8 +12,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class PizzaDetailsViewModel(
-        private val pizzaRepository: PizzaRepository,
-        private val ingredientsRepository: IngredientsRepository) : ViewModel() {
+        private val getPizzaDetailsUseCase: GetPizzaDetailsUseCase,
+        private val getPizzaPriceChangeUseCase: GetPizzaPriceChangeUseCase,
+        private val addPizzaToCartUseCase: AddPizzaToCartUseCase
+) : ViewModel() {
 
     val pizzaDetailsInput = MutableLiveData<PizzaDetailsInput>()
     private val userIngredientSelection = MutableLiveData<Set<Int>?>()
@@ -27,7 +27,7 @@ class PizzaDetailsViewModel(
 
     val pizzaDetailsState: LiveData<PizzaDetailsState> = inputDataDelayed.switchMap { (pizzaDetailsInput, userIngSelection) ->
         liveData {
-            emit(getPizzaDetailsState(pizzaDetailsInput, userIngSelection))
+            emit(getPizzaDetailsUseCase.invoke(pizzaDetailsInput, userIngSelection))
         }
     }
 
@@ -66,27 +66,6 @@ class PizzaDetailsViewModel(
         }
     }
 
-    private suspend fun getPizzaDetailsState(input: PizzaDetailsInput, userIngredientSelection: Set<Int>?): PizzaDetailsState {
-        d(TAG, "getPizzaDetailsState")
-        val pizzas = pizzaRepository.pizzas()
-        val pizza = pizzas.pizzas.first { it.name == input.pizzaName }
-        val ingredients = ingredientsRepository.ingredients()
-        val ingredientItems = mutableListOf<IngredientItem>()
-        val selection = userIngredientSelection ?: pizza.ingredients.toSet()
-        var initialPrice = pizzas.basePrice
-        //non-reactive but efficient
-        ingredients.forEach {
-            ingredientItems.add(IngredientItem(it.id, it.name, "${it.price}"))
-            if (selection.contains(it.id)) {
-                initialPrice += it.price
-            }
-        }
-        val pizzaDetailsList = mutableListOf<BasePizzaDetailsItem>()
-        pizzaDetailsList.add(PizzaImageItem(input.imgUrl, input.transitionName))
-        pizzaDetailsList.addAll(ingredientItems)
-        return PizzaDetailsState(pizzaDetailsList, selection, initialPrice)
-    }
-
     fun restoreState(pizzaDetailsInput: PizzaDetailsInput?, userIngredientSelection: Set<Int>?) {
         this.pizzaDetailsInput.value = pizzaDetailsInput
         this.userIngredientSelection.value = userIngredientSelection
@@ -94,8 +73,7 @@ class PizzaDetailsViewModel(
 
     fun onSelectionChanged(id: Int, isSelected: Boolean) {
         viewModelScope.launch {
-            val ingredientPrice = ingredientsRepository.ingredients().first { it.id == id }.price
-            val priceChange = if (isSelected) ingredientPrice else ingredientPrice * -1
+            val priceChange = getPizzaPriceChangeUseCase.invoke(id, isSelected)
             viewModelScope.launch(Dispatchers.Main) {
                 val addToCartState = _addToCartState.value?.let { it.copy(price = it.price + priceChange) }
                 _addToCartState.value = addToCartState
@@ -103,18 +81,14 @@ class PizzaDetailsViewModel(
         }
     }
 
-    fun addPizzaToCart() {
+    fun addPizzaToCart(selection: Set<Int>) {
         viewModelScope.launch(Dispatchers.IO) {
             _addToCartEnabled.postValue(false)
             delay(PizzaListViewModel.ADD_TO_CART_DELAY)
             _addToCartEnabled.postValue(true)
         }
         viewModelScope.launch(Dispatchers.IO) {
-            //todo
+            addPizzaToCartUseCase.invoke(pizzaName.value!!, addToCartState.value!!, selection)
         }
-    }
-
-    companion object {
-        val TAG = PizzaDetailsViewModel::class.java.simpleName
     }
 }

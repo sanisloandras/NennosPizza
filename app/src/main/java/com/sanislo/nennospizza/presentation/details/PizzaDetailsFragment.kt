@@ -2,7 +2,6 @@ package com.sanislo.nennospizza.presentation.details
 
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -29,10 +28,8 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         }
     }, object : PizzaDetailsAdapter.PizzaImageLoadedCallback {
         override fun pizzaImageLoaded() {
-            d(TAG, "startPostponedEnterTransition")
             startPostponedEnterTransition()
         }
-
     }, pizzaImageLoader)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +50,12 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
         rv.adapter = adapter
         observePizzaDetailsState()
         observeCartState()
-        add_to_cart.setOnClickListener { viewModel.addPizzaToCart() }
         observePizzaName()
+        add_to_cart.setOnClickListener { viewModel.addPizzaToCart(adapter.selection) }
     }
 
     private fun observePizzaName() {
         viewModel.pizzaName.observe(viewLifecycleOwner, Observer {
-            //(activity as? AppCompatActivity)?.supportActionBar?.title = it
             toolbar.title = it
         })
     }

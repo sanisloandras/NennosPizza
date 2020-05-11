@@ -39,6 +39,7 @@ class PizzaDetailsAdapter(val clickHandler: ClickHandler,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             R.layout.layout_pizza_image -> PizzaDetailsViewHolder(getViewByViewType(parent, viewType))
+            R.layout.item_ingredients_label -> IngredientsLabelViewHolder(getViewByViewType(parent, viewType))
             R.layout.item_ingredient -> IngredientViewHolder(getViewByViewType(parent, viewType))
             else -> throw IllegalArgumentException("Can not return ViewHolder for viewType $viewType")
         }
@@ -50,6 +51,7 @@ class PizzaDetailsAdapter(val clickHandler: ClickHandler,
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is PizzaImageItem -> R.layout.layout_pizza_image
+            is IngredientLabelItem -> R.layout.item_ingredients_label
             is IngredientItem -> R.layout.item_ingredient
             else -> super.getItemViewType(position)
         }
@@ -62,6 +64,8 @@ class PizzaDetailsAdapter(val clickHandler: ClickHandler,
     abstract inner class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         open fun bind() {}
     }
+
+    inner class IngredientsLabelViewHolder(itemView: View) : BaseViewHolder(itemView)
 
     inner class PizzaDetailsViewHolder(itemView: View) : BaseViewHolder(itemView) {
         private val ivPizza: ImageView = itemView.findViewById(R.id.iv_pizza)

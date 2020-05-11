@@ -17,6 +17,8 @@ class PizzaImageItem(
         val transitionName: String
 ) : BasePizzaDetailsItem()
 
+class IngredientLabelItem : BasePizzaDetailsItem()
+
 class IngredientItem(
         val id: Int,
         val name: String,

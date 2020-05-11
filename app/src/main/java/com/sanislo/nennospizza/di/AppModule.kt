@@ -43,14 +43,14 @@ val appModule = module {
     single<IngredientsRepository> { IngredientsRepositoryImpl(get()) }
     single<DrinksRepository> { DrinksRepositoryImpl(get()) }
     factory { GetPizzaListUseCase(get(), get()) }
-    factory { GetPizzaDetailsByNameUseCase(get(), get()) }
     factory { AddPizzaToCartUseCase(get()) }
     factory { RemoveFromCartUseCase(get(), get()) }
     factory { CheckoutUseCase(get(), get(), get()) }
     factory { GetDrinksUseCase(get()) }
     factory { AddDrinkToCartUseCase(get(), get()) }
     factory { CartUseCase(get(), get()) }
-    factory { GetPizzaPriceUseCase(get(), get()) }
+    factory { GetPizzaDetailsUseCase(get(), get()) }
+    factory { GetPizzaPriceChangeUseCase(get()) }
     factory { GetTransitionNameUseCase(androidApplication()) }
 }
 
@@ -74,7 +74,7 @@ val pizzaListModule = module {
 }
 
 val pizzaDetailsModule = module {
-    viewModel { PizzaDetailsViewModel(get(), get()) }
+    viewModel { PizzaDetailsViewModel(get(), get(), get()) }
 }
 
 val drinksModule = module {
