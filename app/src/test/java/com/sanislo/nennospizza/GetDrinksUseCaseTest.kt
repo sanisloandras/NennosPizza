@@ -1,14 +1,11 @@
 package com.sanislo.nennospizza
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.api.data.IngOrDrinkItem
-import com.sanislo.nennospizza.api.data.IngOrDrinkResponse
+import com.sanislo.nennospizza.api.data.ResourceResponse
 import com.sanislo.nennospizza.domain.repository.DrinksRepository
 import com.sanislo.nennospizza.domain.usecase.GetDrinksUseCase
-import com.sanislo.nennospizza.domain.usecase.GetPizzaListUseCase
 import com.sanislo.nennospizza.presentation.drinks.DrinkListItem
-import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Rule
@@ -24,7 +21,7 @@ class GetDrinksUseCaseTest {
     fun test() {
         runBlocking{
             val drinksRepository = Mockito.mock(DrinksRepository::class.java)
-            val response = IngOrDrinkResponse()
+            val response = ResourceResponse()
             response.addAll(listOf(
                 IngOrDrinkItem(1, "mock1", 1.0),
                 IngOrDrinkItem(2, "mock2", 2.0),

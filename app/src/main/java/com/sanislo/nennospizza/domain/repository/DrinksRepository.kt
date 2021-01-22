@@ -1,17 +1,17 @@
 package com.sanislo.nennospizza.domain.repository
 
 import com.sanislo.nennospizza.api.data.DataService
-import com.sanislo.nennospizza.api.data.IngOrDrinkResponse
+import com.sanislo.nennospizza.api.data.ResourceResponse
 
 interface DrinksRepository {
-    suspend fun drinks(): IngOrDrinkResponse
+    suspend fun drinks(): ResourceResponse
 }
 
 class DrinksRepositoryImpl (private val dataService: DataService) :
     DrinksRepository {
-    private var cache: IngOrDrinkResponse? = null
+    private var cache: ResourceResponse? = null
 
-    override suspend fun drinks(): IngOrDrinkResponse {
+    override suspend fun drinks(): ResourceResponse {
         cache?.let { return it }
         val drinks = dataService.drinks()
         cache = drinks

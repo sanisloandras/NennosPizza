@@ -4,10 +4,10 @@ import retrofit2.http.GET
 
 interface DataService {
     @GET("ingredients.json")
-    suspend fun ingredients(): IngOrDrinkResponse
+    suspend fun ingredients(): ResourceResponse
 
     @GET("drinks.json")
-    suspend fun drinks(): IngOrDrinkResponse
+    suspend fun drinks(): ResourceResponse
 
     @GET("pizzas.json")
     suspend fun pizzas(): PizzasResponse

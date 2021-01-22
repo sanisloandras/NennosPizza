@@ -2,16 +2,16 @@ package com.sanislo.nennospizza
 
 import com.google.gson.Gson
 import com.sanislo.nennospizza.api.data.DataService
-import com.sanislo.nennospizza.api.data.IngOrDrinkResponse
+import com.sanislo.nennospizza.api.data.ResourceResponse
 import com.sanislo.nennospizza.api.data.PizzasResponse
 
 class FakeDataService  : DataService {
-    override suspend fun ingredients(): IngOrDrinkResponse {
-        return Gson().fromJson(INGREDIENTS, IngOrDrinkResponse::class.java)
+    override suspend fun ingredients(): ResourceResponse {
+        return Gson().fromJson(INGREDIENTS, ResourceResponse::class.java)
     }
 
-    override suspend fun drinks(): IngOrDrinkResponse {
-        return Gson().fromJson(DRINKS, IngOrDrinkResponse::class.java)
+    override suspend fun drinks(): ResourceResponse {
+        return Gson().fromJson(DRINKS, ResourceResponse::class.java)
     }
 
     override suspend fun pizzas(): PizzasResponse {

@@ -3,7 +3,7 @@ package com.sanislo.nennospizza
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.api.data.DataService
-import com.sanislo.nennospizza.api.data.IngOrDrinkResponse
+import com.sanislo.nennospizza.api.data.ResourceResponse
 import com.sanislo.nennospizza.api.data.PizzasResponse
 import com.sanislo.nennospizza.domain.repository.DrinksRepositoryImpl
 import com.sanislo.nennospizza.domain.repository.IngredientsRepositoryImpl
@@ -35,7 +35,7 @@ class RepositoryTest {
     fun testIngredientsRep() {
         runBlocking{
             val dataService = Mockito.mock(DataService::class.java)
-            Mockito.`when`(dataService.ingredients()).thenReturn(IngOrDrinkResponse())
+            Mockito.`when`(dataService.ingredients()).thenReturn(ResourceResponse())
             val repository = IngredientsRepositoryImpl(dataService)
             repository.ingredients()
             repository.ingredients()
@@ -47,7 +47,7 @@ class RepositoryTest {
     fun testDrinksRep() {
         runBlocking{
             val dataService = Mockito.mock(DataService::class.java)
-            Mockito.`when`(dataService.drinks()).thenReturn(IngOrDrinkResponse())
+            Mockito.`when`(dataService.drinks()).thenReturn(ResourceResponse())
             val repository = DrinksRepositoryImpl(dataService)
             repository.drinks()
             repository.drinks()

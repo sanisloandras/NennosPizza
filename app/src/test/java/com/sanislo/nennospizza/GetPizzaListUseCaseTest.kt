@@ -3,7 +3,7 @@ package com.sanislo.nennospizza
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.api.data.IngOrDrinkItem
-import com.sanislo.nennospizza.api.data.IngOrDrinkResponse
+import com.sanislo.nennospizza.api.data.ResourceResponse
 import com.sanislo.nennospizza.api.data.Pizza
 import com.sanislo.nennospizza.api.data.PizzasResponse
 import com.sanislo.nennospizza.domain.repository.IngredientsRepository
@@ -35,7 +35,7 @@ class GetPizzaListUseCaseTest {
             Mockito.`when`(pizzaRepository.pizzas()).thenReturn(pizzasResponse)
 
             val ingredientsRepository = Mockito.mock(IngredientsRepository::class.java)
-            val ingredientsReponse = IngOrDrinkResponse()
+            val ingredientsReponse = ResourceResponse()
             ingredientsReponse.addAll(listOf(
                 IngOrDrinkItem(1, "mockIngredient1", 1.0),
                 IngOrDrinkItem(2, "mockIngredient2", 2.0),
