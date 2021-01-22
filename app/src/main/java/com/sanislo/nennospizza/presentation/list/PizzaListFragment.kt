@@ -32,6 +32,7 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
         observeNavigateToPizzaDetails()
         observeNavigateToCart()
         observeErrors()
+        observeIsLoading()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +59,12 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun observeIsLoading() {
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
+            pb.visibility = if (it) View.VISIBLE else View.GONE
+        })
     }
 
     private fun observePizzaList() {
