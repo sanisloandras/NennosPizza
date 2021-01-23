@@ -33,7 +33,8 @@ versions.mockwebserver = "3.8.1"
 versions.navigation = "2.3.0-alpha01"
 versions.okhttp_logging_interceptor = "3.9.0"
 versions.paging = "2.1.1"
-versions.recyclerview = "1.0.0"
+versions.recyclerview = "1.2.0-beta01"
+versions.recyclerview_selection = "1.0.0"
 versions.retrofit = "2.8.1"
 versions.robolectric = "4.2"
 versions.room = "2.2.3"
@@ -169,6 +170,7 @@ deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${ve
 deps.paging_ktx = "androidx.paging:paging-runtime-ktx:$versions.paging"
 
 deps.recyclerview = "androidx.recyclerview:recyclerview:$versions.recyclerview"
+deps.recyclerview_selection = "androidx.recyclerview:recyclerview-selection:$versions.recyclerview_selection"
 
 def retrofit = [:]
 retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"

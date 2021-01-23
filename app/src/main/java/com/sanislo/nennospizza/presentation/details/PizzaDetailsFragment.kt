@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ConcatAdapter
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
-import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsAdapter
+import com.sanislo.nennospizza.presentation.details.list.IngredientSelectionAdapter
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_pizza_details.*
 import org.koin.android.ext.android.inject
@@ -22,15 +23,16 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
 
     private lateinit var pizzaDetailsInput: PizzaDetailsInput
 
-    private val adapter = PizzaDetailsAdapter(object : PizzaDetailsAdapter.ClickHandler {
-        override fun onSelectionChanged(id: Int, isSelected: Boolean) {
-            viewModel.onSelectionChanged(id, isSelected)
-        }
-    }, object : PizzaDetailsAdapter.PizzaImageLoadedCallback {
+    private val pizzaImageAdapter = PizzaDetailsHeaderAdapter(pizzaImageLoader, object : IngredientSelectionAdapter.PizzaImageLoadedCallback {
         override fun pizzaImageLoaded() {
             startPostponedEnterTransition()
         }
-    }, pizzaImageLoader)
+    })
+    private val pizzaDetailsAdapter = IngredientSelectionAdapter(object : IngredientSelectionAdapter.ClickHandler {
+        override fun onSelectionChanged(id: Int, isSelected: Boolean) {
+            viewModel.onSelectionChanged(id, isSelected)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +49,15 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbarForBack(toolbar)
-        rv.adapter = adapter
+        val concatAdapter = ConcatAdapter(
+                pizzaImageAdapter,
+                pizzaDetailsAdapter
+        )
+        rv.adapter = concatAdapter
         observePizzaDetailsState()
         observeCartState()
         observePizzaName()
-        add_to_cart.setOnClickListener { viewModel.addPizzaToCart(adapter.selection) }
+        add_to_cart.setOnClickListener { viewModel.addPizzaToCart(pizzaDetailsAdapter.selection) }
     }
 
     private fun observePizzaName() {
@@ -62,8 +68,9 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
 
     private fun observePizzaDetailsState() {
         viewModel.pizzaDetailsState.observe(viewLifecycleOwner, Observer {
-            adapter.selection = it.selection.toMutableSet()
-            adapter.submitList(it.list)
+            pizzaImageAdapter.submitList(listOf(it.header))
+            pizzaDetailsAdapter.selection = it.selection.toMutableSet()
+            pizzaDetailsAdapter.submitList(it.ingredients)
         })
     }
 
@@ -93,7 +100,7 @@ class PizzaDetailsFragment : Fragment(R.layout.fragment_pizza_details) {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(EXTRA_INPUT, pizzaDetailsInput)
-        outState.putIntArray(EXTRA_SELECTION, adapter.selection.toIntArray())
+        outState.putIntArray(EXTRA_SELECTION, pizzaDetailsAdapter.selection.toIntArray())
         super.onSaveInstanceState(outState)
     }
 

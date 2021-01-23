@@ -4,10 +4,8 @@ import com.sanislo.nennospizza.domain.repository.IngredientsRepository
 import com.sanislo.nennospizza.domain.repository.PizzaRepository
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsInput
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsViewModel
-import com.sanislo.nennospizza.presentation.details.list.BasePizzaDetailsItem
 import com.sanislo.nennospizza.presentation.details.list.IngredientItem
-import com.sanislo.nennospizza.presentation.details.list.IngredientLabelItem
-import com.sanislo.nennospizza.presentation.details.list.PizzaImageItem
+import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsHeader
 
 class GetPizzaDetailsUseCase(
         private val pizzaRepository: PizzaRepository,
@@ -25,10 +23,9 @@ class GetPizzaDetailsUseCase(
             ingredientItems.add(IngredientItem(it.id, it.name, "${it.price}"))
             if (selection.contains(it.id)) initialPrice += it.price
         }
-        val pizzaDetailsList = mutableListOf<BasePizzaDetailsItem>()
-        pizzaDetailsList.add(PizzaImageItem(input.imgUrl, input.transitionName))
-        pizzaDetailsList.add(IngredientLabelItem())
-        pizzaDetailsList.addAll(ingredientItems)
-        return PizzaDetailsViewModel.PizzaDetailsState(pizzaDetailsList, selection, initialPrice)
+        return PizzaDetailsViewModel.PizzaDetailsState(
+                PizzaDetailsHeader(input.imgUrl, input.transitionName),
+                ingredientItems,
+                selection, initialPrice)
     }
 }

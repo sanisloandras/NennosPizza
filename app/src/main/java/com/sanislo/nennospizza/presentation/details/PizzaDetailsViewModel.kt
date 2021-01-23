@@ -4,7 +4,8 @@ import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.usecase.AddPizzaToCartUseCase
 import com.sanislo.nennospizza.domain.usecase.GetPizzaDetailsUseCase
 import com.sanislo.nennospizza.domain.usecase.GetPizzaPriceChangeUseCase
-import com.sanislo.nennospizza.presentation.details.list.BasePizzaDetailsItem
+import com.sanislo.nennospizza.presentation.details.list.IngredientItem
+import com.sanislo.nennospizza.presentation.details.list.PizzaDetailsHeader
 import com.sanislo.nennospizza.presentation.list.PizzaListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -38,7 +39,8 @@ class PizzaDetailsViewModel(
     val addToCartState: LiveData<AddToCartState> = _addToCartState
 
     data class PizzaDetailsState(
-            val list: List<BasePizzaDetailsItem>,
+            val header: PizzaDetailsHeader,
+            val ingredients: List<IngredientItem>,
             val selection: Set<Int>,
             //todo does not belong here
             val initialPrice: Double
