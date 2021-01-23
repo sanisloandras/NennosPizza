@@ -12,6 +12,7 @@ import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.EventObserver
 import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
 import com.sanislo.nennospizza.presentation.drinks.DrinkListFragment
+import com.sanislo.nennospizza.presentation.thankyou.ThankYouFragment
 import com.sanislo.nennospizza.setupToolbarForBack
 import kotlinx.android.synthetic.main.fragment_cart.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,6 +41,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         observeCart()
         observeNavigateToDrinks()
         observeErrors()
+        observeNavigateToThankYou()
     }
 
     private fun observeErrors() {
@@ -80,6 +82,14 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fl_fragment_container, DrinkListFragment())
                     .addToBackStack(null)
+                    .commit()
+        })
+    }
+
+    private fun observeNavigateToThankYou() {
+        viewModel.navigateToThankYouEvent.observe(viewLifecycleOwner, EventObserver {
+            requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fl_fragment_container, ThankYouFragment())
                     .commit()
         })
     }

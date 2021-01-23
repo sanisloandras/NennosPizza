@@ -20,6 +20,9 @@ class CartViewModel(
     private val _navigateToDrinksEvent = MutableLiveData<Event<Unit>>()
     val navigateToDrinksEvent: LiveData<Event<Unit>> = _navigateToDrinksEvent
 
+    private val _navigateToThankYouEvent = MutableLiveData<Event<Unit>>()
+    val navigateToThankYouEvent: LiveData<Event<Unit>> = _navigateToThankYouEvent
+
     private val _errors = MutableLiveData<Event<Exception>>()
     val errors: LiveData<Event<Exception>> = _errors
 
@@ -27,7 +30,9 @@ class CartViewModel(
         cart.value?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
+                    //todo maybe show progress for this, but the design is unknown
                     checkoutUseCase.invoke(it)
+                    _navigateToThankYouEvent.postValue(Event(Unit))
                 } catch (e: Exception) {
                     _errors.postValue(Event(e))
                 }

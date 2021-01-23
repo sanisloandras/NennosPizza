@@ -10,4 +10,6 @@
     <string name="drinks">Drinks</string>
 
     <string name="pizza_details_transition">pizza_details_transition_%d</string>
+    <string name="thank_you_for_your_order">Thank you for your order</string>
+    <string name="back_to_home">Back to home</string>
 </resources>
