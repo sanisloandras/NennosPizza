@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sanislo.nennospizza.R
@@ -17,11 +18,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CartFragment : Fragment(R.layout.fragment_cart) {
     private val viewModel: CartViewModel by viewModel()
-    private val cartListAdapter = CartListAdapter(object : CartListAdapter.ClickHandler {
-        override fun onRemove(baseCartItem: BaseCartItem) {
-            viewModel.onRemoveCartItem(baseCartItem)
-        }
-    })
+    private val onItemClickListener: (BaseCartItem) -> Unit = {
+        viewModel.onRemoveCartItem(it)
+    }
+    private val cartListAdapter = CartListAdapter(onItemClickListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +32,21 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbarForBack(toolbar, getString(R.string.cart))
         rv_cart.adapter = cartListAdapter
+        tv_checkout.setOnClickListener { viewModel.checkout() }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         observeCart()
         observeNavigateToDrinks()
-        tv_checkout.setOnClickListener { viewModel.checkout() }
+        observeErrors()
+    }
+
+    private fun observeErrors() {
+        viewModel.errors.observe(viewLifecycleOwner, EventObserver {
+            Toast.makeText(requireContext(), it.message
+                    ?: getString(R.string.unexpected_error), Toast.LENGTH_LONG).show()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -51,9 +63,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             viewModel.onTapDrinks()
             true
         }
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun observeCart() {

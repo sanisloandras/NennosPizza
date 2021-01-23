@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
 
-class CartListAdapter(val clickHandler: ClickHandler) :
+class CartListAdapter(private val itemClickListener: (BaseCartItem) -> Unit) :
     ListAdapter<BaseCartItem, CartListAdapter.ViewHolder>(AsyncDifferConfig.Builder<BaseCartItem>(object : DiffUtil.ItemCallback<BaseCartItem>() {
         override fun areItemsTheSame(oldItem: BaseCartItem, newItem: BaseCartItem): Boolean {
             return oldItem.id == newItem.id
@@ -24,10 +24,6 @@ class CartListAdapter(val clickHandler: ClickHandler) :
 
     }).build()) {
 
-    interface ClickHandler {
-        fun onRemove(baseCartItem: BaseCartItem)
-    }
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName = itemView.findViewById<TextView>(R.id.tv_name)
         private val tvPrice = itemView.findViewById<TextView>(R.id.tv_price)
@@ -36,7 +32,7 @@ class CartListAdapter(val clickHandler: ClickHandler) :
         init {
             ibDelete.setOnClickListener {
                 if (adapterPosition == -1) return@setOnClickListener
-                clickHandler.onRemove(getItem(adapterPosition))
+                itemClickListener(getItem(adapterPosition))
             }
         }
 

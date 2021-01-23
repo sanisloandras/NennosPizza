@@ -24,12 +24,8 @@ class CheckoutUseCase(private val checkoutService: CheckoutService,
                 it.drinkId
             }
         val checkout = Checkout(pizzas, drinkIds)
-        try {
-            checkoutService.checkout(checkout)
-            pizzaCartDao.clear()
-            drinkCartDao.clear()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        checkoutService.checkout(checkout)
+        pizzaCartDao.clear()
+        drinkCartDao.clear()
     }
 }
