@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class PizzaListAdapter(val clickHandler: ClickHandler) : ListAdapter<PizzaListItem, PizzaListAdapter.ViewHolder>(
     asyncDifferConfig

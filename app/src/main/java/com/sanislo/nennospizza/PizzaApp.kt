@@ -14,6 +14,7 @@ class PizzaApp : Application() {
         KoinApplication.init()
         val koin: KoinApplication = KoinAndroidApplication.create(this)
             .modules(getModules())
-        startKoin(GlobalContext(), koin)
+        //startKoin(Glo(), koin)
+        startKoin(GlobalContext, koin)
     }
 }
