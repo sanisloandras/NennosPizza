@@ -53,9 +53,4 @@ class PizzaListViewModel(private val getPizzaListUseCase: GetPizzaListUseCase,
     fun onTapCart() {
         _navigateToCartEvent.value = Event(Unit)
     }
-
-    companion object {
-        val TAG = PizzaListViewModel::class.java.simpleName
-        const val ADD_TO_CART_DELAY = 5_000L
-    }
 }
