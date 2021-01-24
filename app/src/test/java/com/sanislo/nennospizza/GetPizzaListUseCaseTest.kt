@@ -25,13 +25,13 @@ class GetPizzaListUseCaseTest {
     //todo proper way to test this would be to mock the response, but I dont't have time for that, sorry :/
     @Test
     fun test() {
-        runBlocking{
+        runBlocking {
             val pizzaRepository = Mockito.mock(PizzaRepository::class.java)
             val pizzas = listOf(
                 Pizza("mockImgUrl", listOf(1,2), "mockPizza"),
                 Pizza("anotherMockImgUrl", listOf(1,5), "anotherMockPizza")
             )
-            val pizzasResponse = PizzasResponse(4, pizzas)
+            val pizzasResponse = PizzasResponse(4.0, pizzas)
             Mockito.`when`(pizzaRepository.pizzas()).thenReturn(pizzasResponse)
 
             val ingredientsRepository = Mockito.mock(IngredientsRepository::class.java)
@@ -46,8 +46,8 @@ class GetPizzaListUseCaseTest {
             val getPizzaListUseCase = GetPizzaListUseCase(pizzaRepository, ingredientsRepository)
             val pizzaList = getPizzaListUseCase.invoke()
             val expectedPizzaList = listOf(
-                PizzaListItem("mockPizza", "mockIngredient1, mockIngredient2", "$7.0", "mockImgUrl", listOf(1,2)),
-                PizzaListItem("anotherMockPizza", "mockIngredient1, mockIngredient5", "$8.0", "anotherMockImgUrl", listOf(1,5))
+                PizzaListItem("mockPizza", "mockIngredient1, mockIngredient2", "$7.0", "mockImgUrl", setOf(1,2)),
+                PizzaListItem("anotherMockPizza", "mockIngredient1, mockIngredient5", "$8.0", "anotherMockImgUrl", setOf(1,5))
             )
             Assert.assertEquals(expectedPizzaList, pizzaList)
             Mockito.verify(pizzaRepository, times(1)).pizzas()

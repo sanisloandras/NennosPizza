@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.times
 import com.sanislo.nennospizza.domain.repository.IngredientsRepositoryImpl
 import com.sanislo.nennospizza.presentation.details.PizzaDetails
-import com.sanislo.nennospizza.presentation.details.list.IngredientItemItem
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
@@ -17,7 +16,7 @@ class IngredientCheckUseCaseTest {
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    @Test
+    /*@Test
     fun test() {
         runBlocking{
             val mockDataService = MockDataSerivce.create()
@@ -71,5 +70,5 @@ class IngredientCheckUseCaseTest {
             mapOf(1 to true, 2 to true, 3 to true, 4 to true, 9 to true),
             11.5
         )
-    }
+    }*/
 }

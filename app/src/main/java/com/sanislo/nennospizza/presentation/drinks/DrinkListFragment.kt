@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_drinks.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DrinkListFragment : Fragment(R.layout.fragment_drinks) {
-    private val viewModel: DrinksViewModel by viewModel()
+    private val viewModel: DrinkListViewModel by viewModel()
 
     private val drinkListAdapter = DrinkListAdapter(object : DrinkListAdapter.ClickHandler {
         override fun add(drinkListItem: DrinkListItem) {

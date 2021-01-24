@@ -23,7 +23,7 @@ class RepositoryTest {
     fun testPizzaRep() {
         runBlocking{
             val dataService = Mockito.mock(DataService::class.java)
-            Mockito.`when`(dataService.pizzas()).thenReturn(PizzasResponse(0, emptyList()))
+            Mockito.`when`(dataService.pizzas()).thenReturn(PizzasResponse(0.0, emptyList()))
             val repository = PizzaRepositoryImpl(dataService)
             repository.pizzas()
             repository.pizzas()

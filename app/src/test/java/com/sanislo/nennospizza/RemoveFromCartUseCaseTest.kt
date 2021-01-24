@@ -17,15 +17,15 @@ class RemoveFromCartUseCaseTest {
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    val pizzaCartDao = Mockito.mock(PizzaCartDao::class.java)
-    val drinkCartDao = Mockito.mock(DrinkCartDao::class.java)
-    val useCase = RemoveFromCartUseCase(pizzaCartDao, drinkCartDao)
+    private val pizzaCartDao = Mockito.mock(PizzaCartDao::class.java)
+    private val drinkCartDao = Mockito.mock(DrinkCartDao::class.java)
+    private val useCase = RemoveFromCartUseCase(pizzaCartDao, drinkCartDao)
 
     @Test
     fun testPizzaCartItem() = runBlocking{
         val cartItem = PizzaCartItem("1", "mock", "mock", ingredientIds = emptySet())
         useCase.invoke(cartItem)
-        Mockito.verify(pizzaCartDao).deleteById(any())
+        Mockito.verify(pizzaCartDao).deleteById("1")
         Mockito.verifyNoMoreInteractions(pizzaCartDao)
         Mockito.verifyNoMoreInteractions(drinkCartDao)
     }
@@ -34,7 +34,7 @@ class RemoveFromCartUseCaseTest {
     fun testDrinkCartItem() = runBlocking{
         val cartItem = DrinkCartItem("1", "mock", "mock", drinkId = 1)
         useCase.invoke(cartItem)
-        Mockito.verify(drinkCartDao).deleteById(any())
+        Mockito.verify(drinkCartDao).deleteById("1")
         Mockito.verifyNoMoreInteractions(pizzaCartDao)
         Mockito.verifyNoMoreInteractions(drinkCartDao)
     }

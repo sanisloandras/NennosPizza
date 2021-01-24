@@ -10,7 +10,7 @@ import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.PizzaImageLoaderImpl
 import com.sanislo.nennospizza.presentation.cart.CartViewModel
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsViewModel
-import com.sanislo.nennospizza.presentation.drinks.DrinksViewModel
+import com.sanislo.nennospizza.presentation.drinks.DrinkListViewModel
 import com.sanislo.nennospizza.presentation.list.PizzaListViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -78,7 +78,7 @@ val pizzaDetailsModule = module {
 }
 
 val drinksModule = module {
-    viewModel { DrinksViewModel(get(), get()) }
+    viewModel { DrinkListViewModel(get(), get()) }
 }
 
 val cartModule = module {

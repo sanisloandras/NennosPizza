@@ -10,7 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class DrinksViewModel(
+class DrinkListViewModel(
         private val getDrinksUseCase: GetDrinksUseCase,
         private val addDrinkToCartUseCase: AddDrinkToCartUseCase
 ) : ViewModel() {

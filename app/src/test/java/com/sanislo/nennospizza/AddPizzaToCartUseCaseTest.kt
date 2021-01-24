@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.sanislo.nennospizza.db.PizzaCartDao
 import com.sanislo.nennospizza.domain.usecase.AddPizzaToCartUseCase
+import com.sanislo.nennospizza.presentation.details.AddToCartState
 import com.sanislo.nennospizza.presentation.details.PizzaDetails
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
@@ -19,7 +20,7 @@ class AddPizzaToCartUseCaseTest {
     fun test() = runBlocking{
         val pizzaCartDao = Mockito.mock(PizzaCartDao::class.java)
         val useCase = AddPizzaToCartUseCase(pizzaCartDao)
-        useCase.invoke(PizzaDetails("", "", emptyList(), emptyMap(), 0.0), emptyMap())
+        useCase.invoke("pizzaName", AddToCartState(), emptySet())
         Mockito.verify(pizzaCartDao).insert(any())
         Mockito.verifyNoMoreInteractions(pizzaCartDao)
     }

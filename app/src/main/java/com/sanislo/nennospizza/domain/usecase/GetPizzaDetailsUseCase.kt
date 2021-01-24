@@ -20,7 +20,7 @@ class GetPizzaDetailsUseCase(
         var initialPrice = pizzas.basePrice
         //non-reactive but efficient
         ingredients.forEach {
-            ingredientItems.add(IngredientItem(it.id, it.name, "${it.price}"))
+            ingredientItems.add(IngredientItem(it.id, it.name, "$${it.price}"))
             if (selection.contains(it.id)) initialPrice += it.price
         }
         return PizzaDetailsViewModel.PizzaDetailsState(
