@@ -1,9 +1,6 @@
 package com.sanislo.nennospizza.presentation.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.usecase.GetPizzaListUseCase
 import com.sanislo.nennospizza.domain.usecase.GetTransitionNameUseCase
 import com.sanislo.nennospizza.presentation.Event
