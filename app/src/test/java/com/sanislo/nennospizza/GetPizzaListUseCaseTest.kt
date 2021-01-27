@@ -10,13 +10,17 @@ import com.sanislo.nennospizza.domain.repository.IngredientsRepository
 import com.sanislo.nennospizza.domain.repository.PizzaRepository
 import com.sanislo.nennospizza.domain.usecase.GetPizzaListUseCase
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
+@ExperimentalCoroutinesApi
 class GetPizzaListUseCaseTest {
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Rule
     @JvmField
@@ -43,7 +47,7 @@ class GetPizzaListUseCaseTest {
             )
             Mockito.`when`(ingredientsRepository.ingredients()).thenReturn(ingredientsReponse)
 
-            val getPizzaListUseCase = GetPizzaListUseCase(pizzaRepository, ingredientsRepository)
+            val getPizzaListUseCase = GetPizzaListUseCase(mainCoroutineRule.dispatcher, pizzaRepository, ingredientsRepository)
             val pizzaList = getPizzaListUseCase.invoke()
             val expectedPizzaList = listOf(
                 PizzaListItem("mockPizza", "mockIngredient1, mockIngredient2", "$7.0", "mockImgUrl", setOf(1,2)),

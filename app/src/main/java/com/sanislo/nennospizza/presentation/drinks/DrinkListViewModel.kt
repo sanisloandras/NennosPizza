@@ -1,25 +1,20 @@
 package com.sanislo.nennospizza.presentation.drinks
 
-import android.util.Log.d
 import androidx.lifecycle.*
 import com.sanislo.nennospizza.domain.ADD_TO_CART_DELAY
 import com.sanislo.nennospizza.domain.usecase.AddDrinkToCartUseCase
 import com.sanislo.nennospizza.domain.usecase.GetDrinksUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class DrinkListViewModel(
+        private val ioDispatcher: CoroutineDispatcher,
         private val getDrinksUseCase: GetDrinksUseCase,
         private val addDrinkToCartUseCase: AddDrinkToCartUseCase
 ) : ViewModel() {
-    val drinks = liveData(Dispatchers.IO) {
-        emit(getDrinksUseCase.invoke())
-    }
+    val drinks = liveData(ioDispatcher) { emit(getDrinksUseCase.invoke()) }
 
     private val _drinkAddedToCart = MutableLiveData<Boolean>()
-    val drinkAddedToCart: LiveData<Boolean> = _drinkAddedToCart
+    val drinkAddedToCart: LiveData<Boolean> = _drinkAddedToCart.distinctUntilChanged()
 
     private var drinkAddedToCartJob: Job? = null
 
@@ -32,7 +27,7 @@ class DrinkListViewModel(
     }
 
     fun addDrink(drinkListItem: DrinkListItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             addDrinkToCartUseCase.invoke(drinkListItem)
             drinkAddedToCartJob?.cancel()
             drinkAddedToCartJob = drinkAddedToCartDelay()

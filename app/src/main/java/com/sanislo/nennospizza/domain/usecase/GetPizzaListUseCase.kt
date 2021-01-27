@@ -4,12 +4,16 @@ import com.sanislo.nennospizza.domain.repository.IngredientsRepository
 import com.sanislo.nennospizza.domain.repository.PizzaRepository
 import com.sanislo.nennospizza.presentation.list.PizzaListItem
 import kotlinx.coroutines.*
+import kotlin.jvm.Throws
 
-class GetPizzaListUseCase(private val pizzaRepository: PizzaRepository,
+class GetPizzaListUseCase(
+        private val dispatcher: CoroutineDispatcher,
+        private val pizzaRepository: PizzaRepository,
                           private val ingredientsRepository: IngredientsRepository
 ) {
+    @Throws(Exception::class)
     suspend fun invoke(): List<PizzaListItem> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             val pizzasDeferred = async { pizzaRepository.pizzas() }
             val ingredientsDeferred = async { ingredientsRepository.ingredients() }
             val pizzas = pizzasDeferred.await()

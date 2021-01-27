@@ -30,6 +30,21 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    android {
+        sourceSets {
+            String sharedTestDir = 'src/sharedTest/java'
+            test {
+                java.srcDir sharedTestDir
+            }
+            androidTest {
+                java.srcDir sharedTestDir
+            }
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
@@ -72,6 +87,7 @@ dependencies {
 
     implementation deps.core_ktx
     implementation deps.coroutines.android
+    implementation deps.coroutines.test
 
     implementation deps.activity.activity_ktx
 

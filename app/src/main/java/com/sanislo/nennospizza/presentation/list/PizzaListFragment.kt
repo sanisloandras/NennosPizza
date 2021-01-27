@@ -33,6 +33,7 @@ class PizzaListFragment : Fragment(R.layout.fragment_pizza_list) {
         observeNavigateToCart()
         observeErrors()
         observeIsLoading()
+        viewModel.load()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

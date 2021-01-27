@@ -12,6 +12,7 @@ import com.sanislo.nennospizza.presentation.cart.CartViewModel
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsViewModel
 import com.sanislo.nennospizza.presentation.drinks.DrinkListViewModel
 import com.sanislo.nennospizza.presentation.list.PizzaListViewModel
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -42,7 +43,7 @@ val appModule = module {
     single<PizzaRepository> { PizzaRepositoryImpl(get()) }
     single<IngredientsRepository> { IngredientsRepositoryImpl(get()) }
     single<DrinksRepository> { DrinksRepositoryImpl(get()) }
-    factory { GetPizzaListUseCase(get(), get()) }
+    factory { GetPizzaListUseCase(Dispatchers.IO, get(), get()) }
     factory { AddPizzaToCartUseCase(get()) }
     factory { RemoveFromCartUseCase(get(), get()) }
     factory { CheckoutUseCase(get(), get(), get()) }
@@ -70,7 +71,7 @@ fun getModules(): List<Module> {
 }
 
 val pizzaListModule = module {
-    viewModel { PizzaListViewModel(get(), get()) }
+    viewModel { PizzaListViewModel(Dispatchers.IO, get(), get()) }
 }
 
 val pizzaDetailsModule = module {
@@ -78,7 +79,7 @@ val pizzaDetailsModule = module {
 }
 
 val drinksModule = module {
-    viewModel { DrinkListViewModel(get(), get()) }
+    viewModel { DrinkListViewModel(Dispatchers.IO, get(), get()) }
 }
 
 val cartModule = module {

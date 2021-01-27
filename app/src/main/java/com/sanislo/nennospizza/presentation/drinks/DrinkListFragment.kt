@@ -1,6 +1,7 @@
 package com.sanislo.nennospizza.presentation.drinks
 
 import android.os.Bundle
+import android.util.Log.d
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -33,13 +34,13 @@ class DrinkListFragment : Fragment(R.layout.fragment_drinks) {
     }
 
     private fun observeAddedToCart() {
-        viewModel.drinkAddedToCart.observe(viewLifecycleOwner, Observer {
+        viewModel.drinkAddedToCart.observe(viewLifecycleOwner, {
             tv_added_to_cart.visibility = if (it) View.VISIBLE else View.GONE
         })
     }
 
     private fun observeDrinks() {
-        viewModel.drinks.observe(viewLifecycleOwner, Observer {
+        viewModel.drinks.observe(viewLifecycleOwner, {
             drinkListAdapter.submitList(it)
         })
     }
