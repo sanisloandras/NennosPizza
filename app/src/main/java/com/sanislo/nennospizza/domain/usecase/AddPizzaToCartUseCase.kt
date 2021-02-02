@@ -14,7 +14,7 @@ class AddPizzaToCartUseCase(private val pizzaCartDao: PizzaCartDao) {
         val pizzaCartItemEntity = PizzaCartItemEntity(
                 id = UUID.randomUUID().toString(),
                 name = pizzaName,
-                price = "${addToCartState.price}",
+                price = "$${addToCartState.price}",
                 ingredientIds = selectedIngredientIds,
                 createdAt = Date())
         pizzaCartDao.insert(pizzaCartItemEntity)

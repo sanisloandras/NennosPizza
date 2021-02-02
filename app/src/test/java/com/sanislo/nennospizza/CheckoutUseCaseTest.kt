@@ -1,18 +1,15 @@
 package com.sanislo.nennospizza
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
+import com.sanislo.nennospizza.api.checkout.Checkout
 import com.sanislo.nennospizza.api.checkout.CheckoutService
-import com.sanislo.nennospizza.api.data.PizzasResponse
+import com.sanislo.nennospizza.api.checkout.Pizza
 import com.sanislo.nennospizza.db.DrinkCartDao
+import com.sanislo.nennospizza.db.DrinkCartItemEntity
 import com.sanislo.nennospizza.db.PizzaCartDao
-import com.sanislo.nennospizza.domain.usecase.AddPizzaToCartUseCase
+import com.sanislo.nennospizza.db.PizzaCartItemEntity
 import com.sanislo.nennospizza.domain.usecase.CheckoutUseCase
-import com.sanislo.nennospizza.presentation.cart.data.Cart
-import com.sanislo.nennospizza.presentation.cart.data.DrinkCartItem
-import com.sanislo.nennospizza.presentation.cart.data.PizzaCartItem
-import com.sanislo.nennospizza.presentation.details.PizzaDetails
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
@@ -25,18 +22,34 @@ class CheckoutUseCaseTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @Test
-    fun test() = runBlocking{
+    fun test() = runBlocking {
         val checkoutService = Mockito.mock(CheckoutService::class.java)
+
         val pizzaCartDao = Mockito.mock(PizzaCartDao::class.java)
-        val drinkCartDao = Mockito.mock(DrinkCartDao::class.java)
-        val useCase = CheckoutUseCase(checkoutService, pizzaCartDao, drinkCartDao)
-        val cartItems = listOf(
-            PizzaCartItem("1", "mock", "mock", Date(), setOf(1,2)),
-            DrinkCartItem("1", "mock", "mock", Date(), 1)
+        Mockito.`when`(pizzaCartDao.all()).thenReturn(
+                listOf(
+                        PizzaCartItemEntity("1", "pizza_1", "$3.0", setOf(1, 2), Date()),
+                        PizzaCartItemEntity("2", "pizza_2", "$4.0", setOf(2, 3), Date()),
+                )
         )
-        val cart = Cart(cartItems, 1.0)
-        useCase.invoke(cart)
-        Mockito.verify(checkoutService, times(1)).checkout(any())
+
+        val drinkCartDao = Mockito.mock(DrinkCartDao::class.java)
+        Mockito.`when`(drinkCartDao.all()).thenReturn(
+                listOf(DrinkCartItemEntity("3", 7, "drink_1", "$1.0", Date()))
+        )
+
+        val useCase = CheckoutUseCase(checkoutService, pizzaCartDao, drinkCartDao)
+        useCase.invoke()
+
+        val checkout = Checkout(
+                listOf(
+                        Pizza(listOf(1, 2), "pizza_1"),
+                        Pizza(listOf(2, 3), "pizza_2"),
+                ),
+                listOf(7)
+        )
+
+        Mockito.verify(checkoutService, times(1)).checkout(checkout)
         Mockito.verify(pizzaCartDao, times(1)).clear()
         Mockito.verify(drinkCartDao, times(1)).clear()
     }

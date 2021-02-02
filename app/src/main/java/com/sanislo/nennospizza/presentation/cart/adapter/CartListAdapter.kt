@@ -1,4 +1,4 @@
-package com.sanislo.nennospizza.presentation.cart
+package com.sanislo.nennospizza.presentation.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,19 +10,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sanislo.nennospizza.R
-import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
 
-class CartListAdapter(private val itemClickListener: (BaseCartItem) -> Unit) :
-    ListAdapter<BaseCartItem, CartListAdapter.ViewHolder>(AsyncDifferConfig.Builder<BaseCartItem>(object : DiffUtil.ItemCallback<BaseCartItem>() {
-        override fun areItemsTheSame(oldItem: BaseCartItem, newItem: BaseCartItem): Boolean {
-            return oldItem.id == newItem.id
-        }
+class CartListAdapter(private val removeClickHandler: (CartListItem) -> Unit) :
+        ListAdapter<CartListItem, CartListAdapter.ViewHolder>(AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<CartListItem>() {
+            override fun areItemsTheSame(oldItem: CartListItem, newItem: CartListItem): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-        override fun areContentsTheSame(oldItem: BaseCartItem, newItem: BaseCartItem): Boolean {
-            return oldItem == newItem
-        }
+            override fun areContentsTheSame(oldItem: CartListItem, newItem: CartListItem): Boolean {
+                return oldItem == newItem
+            }
 
-    }).build()) {
+        }).build()) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName = itemView.findViewById<TextView>(R.id.tv_name)
@@ -31,13 +30,13 @@ class CartListAdapter(private val itemClickListener: (BaseCartItem) -> Unit) :
 
         init {
             ibDelete.setOnClickListener {
-                if (adapterPosition == -1) return@setOnClickListener
-                itemClickListener(getItem(adapterPosition))
+                if (bindingAdapterPosition == -1) return@setOnClickListener
+                removeClickHandler(getItem(bindingAdapterPosition))
             }
         }
 
         fun bind() {
-            getItem(adapterPosition).run {
+            getItem(bindingAdapterPosition).run {
                 tvName.text = name
                 tvPrice.text = price
             }

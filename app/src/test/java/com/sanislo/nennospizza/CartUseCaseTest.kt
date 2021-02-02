@@ -5,10 +5,9 @@ import com.sanislo.nennospizza.db.DrinkCartDao
 import com.sanislo.nennospizza.db.DrinkCartItemEntity
 import com.sanislo.nennospizza.db.PizzaCartDao
 import com.sanislo.nennospizza.db.PizzaCartItemEntity
-import com.sanislo.nennospizza.domain.usecase.CartUseCase
-import com.sanislo.nennospizza.presentation.cart.data.Cart
-import com.sanislo.nennospizza.presentation.cart.data.DrinkCartItem
-import com.sanislo.nennospizza.presentation.cart.data.PizzaCartItem
+import com.sanislo.nennospizza.domain.usecase.cart.CartUseCase
+import com.sanislo.nennospizza.presentation.cart.Cart
+import com.sanislo.nennospizza.presentation.cart.adapter.CartListItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -26,19 +25,19 @@ class CartUseCaseTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @Test
-    fun test() = runBlocking{
+    fun test() = runBlocking {
         val pizzaCartDao = Mockito.mock(PizzaCartDao::class.java)
         val drinkCartDao = Mockito.mock(DrinkCartDao::class.java)
         val date = Date()
-        `when`(pizzaCartDao.allFlow()).thenReturn(flowOf(listOf(PizzaCartItemEntity("1", "mockPizza", "$1.0", setOf(1,2), date))))
+        `when`(pizzaCartDao.allFlow()).thenReturn(flowOf(listOf(PizzaCartItemEntity("1", "mockPizza", "$1.0", setOf(1, 2), date))))
         `when`(drinkCartDao.allFlow()).thenReturn(flowOf(listOf(DrinkCartItemEntity("2", 2, "mockDrink", "$2.0", date))))
         val useCase = CartUseCase(pizzaCartDao, drinkCartDao)
-        val cartFlow =  useCase.invoke()
-        val cartItems = listOf(
-            PizzaCartItem("1", "mockPizza", "$1.0", date, setOf(1,2)),
-            DrinkCartItem("2", "mockDrink", "$2.0", date, 2)
+        val cartFlow = useCase.invoke()
+        val cartListItems = listOf(
+                CartListItem("1", "mockPizza", "$1.0"),
+                CartListItem("2", "mockDrink", "$2.0")
         )
-        val expected = Cart(cartItems, 3.0)
+        val expected = Cart(cartListItems, 3.0)
         cartFlow.collect {
             Assert.assertEquals(it, expected)
             Mockito.verify(pizzaCartDao, times(1)).allFlow()

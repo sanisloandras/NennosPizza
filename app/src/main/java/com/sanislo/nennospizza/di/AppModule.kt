@@ -6,6 +6,7 @@ import com.sanislo.nennospizza.api.data.DataService
 import com.sanislo.nennospizza.db.AppDb
 import com.sanislo.nennospizza.domain.repository.*
 import com.sanislo.nennospizza.domain.usecase.*
+import com.sanislo.nennospizza.domain.usecase.cart.CartUseCase
 import com.sanislo.nennospizza.presentation.PizzaImageLoader
 import com.sanislo.nennospizza.presentation.PizzaImageLoaderImpl
 import com.sanislo.nennospizza.presentation.cart.CartViewModel
@@ -83,5 +84,5 @@ val drinksModule = module {
 }
 
 val cartModule = module {
-    viewModel { CartViewModel(get(), get(), get()) }
+    viewModel { CartViewModel(Dispatchers.IO, get(), get(), get()) }
 }

@@ -1,21 +1,21 @@
 package com.sanislo.nennospizza.presentation.cart
 
 import androidx.lifecycle.*
-import com.sanislo.nennospizza.domain.usecase.CartUseCase
 import com.sanislo.nennospizza.domain.usecase.CheckoutUseCase
 import com.sanislo.nennospizza.domain.usecase.RemoveFromCartUseCase
+import com.sanislo.nennospizza.domain.usecase.cart.CartUseCase
 import com.sanislo.nennospizza.presentation.Event
-import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
-import com.sanislo.nennospizza.presentation.cart.data.Cart
-import kotlinx.coroutines.Dispatchers
+import com.sanislo.nennospizza.presentation.cart.adapter.CartListItem
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class CartViewModel(
+        private val ioDispatcher: CoroutineDispatcher,
         private val checkoutUseCase: CheckoutUseCase,
         private val removeFromFromCartUseCase: RemoveFromCartUseCase,
         cartUseCase: CartUseCase) : ViewModel() {
 
-    val cart: LiveData<Cart> = cartUseCase.invoke().asLiveData(Dispatchers.IO)
+    val cart = cartUseCase.invoke().asLiveData(viewModelScope.coroutineContext + ioDispatcher)
 
     private val _navigateToDrinksEvent = MutableLiveData<Event<Unit>>()
     val navigateToDrinksEvent: LiveData<Event<Unit>> = _navigateToDrinksEvent
@@ -27,22 +27,20 @@ class CartViewModel(
     val errors: LiveData<Event<Exception>> = _errors
 
     fun checkout() {
-        cart.value?.let {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    //todo maybe show progress for this, but the design is unknown
-                    checkoutUseCase.invoke(it)
-                    _navigateToThankYouEvent.postValue(Event(Unit))
-                } catch (e: Exception) {
-                    _errors.postValue(Event(e))
-                }
+        viewModelScope.launch(ioDispatcher) {
+            try {
+                //todo maybe show progress for this, but the design is unknown
+                checkoutUseCase.invoke()
+                _navigateToThankYouEvent.postValue(Event(Unit))
+            } catch (e: Exception) {
+                _errors.postValue(Event(e))
             }
         }
     }
 
-    fun onRemoveCartItem(baseCartItem: BaseCartItem) {
-        viewModelScope.launch(Dispatchers.IO) {
-            removeFromFromCartUseCase.invoke(baseCartItem)
+    fun onRemoveCartItem(cartListItem: CartListItem) {
+        viewModelScope.launch(ioDispatcher) {
+            removeFromFromCartUseCase.invoke(cartListItem)
         }
     }
 

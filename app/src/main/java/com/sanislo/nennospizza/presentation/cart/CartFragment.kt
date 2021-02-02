@@ -7,10 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.sanislo.nennospizza.R
 import com.sanislo.nennospizza.presentation.EventObserver
-import com.sanislo.nennospizza.presentation.cart.data.BaseCartItem
+import com.sanislo.nennospizza.presentation.cart.adapter.CartListAdapter
+import com.sanislo.nennospizza.presentation.cart.adapter.CartListItem
 import com.sanislo.nennospizza.presentation.drinks.DrinkListFragment
 import com.sanislo.nennospizza.presentation.thankyou.ThankYouFragment
 import com.sanislo.nennospizza.setupToolbarForBack
@@ -19,10 +19,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CartFragment : Fragment(R.layout.fragment_cart) {
     private val viewModel: CartViewModel by viewModel()
-    private val onItemClickListener: (BaseCartItem) -> Unit = {
+
+    private val removeClickHandler: (CartListItem) -> Unit = {
         viewModel.onRemoveCartItem(it)
     }
-    private val cartListAdapter = CartListAdapter(onItemClickListener)
+    private val cartListAdapter = CartListAdapter(removeClickHandler)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +70,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     }
 
     private fun observeCart() {
-        viewModel.cart.observe(viewLifecycleOwner, Observer {
+        viewModel.cart.observe(viewLifecycleOwner, {
             cartListAdapter.submitList(it.cartItems)
             tv_checkout.text = getString(R.string.checkout, it.price)
             tv_checkout.visibility = if (it.cartItems.isEmpty()) View.GONE else View.VISIBLE

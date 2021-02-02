@@ -2,7 +2,6 @@ package com.sanislo.nennospizza
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.atLeast
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.sanislo.nennospizza.domain.usecase.AddDrinkToCartUseCase
@@ -16,14 +15,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.time.measureDuration
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import kotlin.time.ExperimentalTime
-import kotlin.time.measureTime
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)

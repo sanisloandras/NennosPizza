@@ -1,10 +1,9 @@
-package com.sanislo.nennospizza.domain.usecase
+package com.sanislo.nennospizza.domain.usecase.cart
 
 import com.sanislo.nennospizza.db.DrinkCartDao
 import com.sanislo.nennospizza.db.PizzaCartDao
-import com.sanislo.nennospizza.presentation.cart.data.Cart
-import com.sanislo.nennospizza.presentation.cart.data.DrinkCartItem
-import com.sanislo.nennospizza.presentation.cart.data.PizzaCartItem
+import com.sanislo.nennospizza.presentation.cart.Cart
+import com.sanislo.nennospizza.presentation.cart.adapter.CartListItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -41,14 +40,15 @@ class CartUseCase(private val pizzaCartDao: PizzaCartDao,
                     drinkCartItemEntity.drinkId)
             }
         }
-        return pizzaCartItems.combine(drinkCartItems) { pizzas, drinks ->
+
+        return combine(pizzaCartItems, drinkCartItems) { pizzas, drinks ->
             val cartItems = pizzas.plus(drinks).sortedBy { it.date }
             val price = if (cartItems.isEmpty()) 0.0 else cartItems.map {
                 it.price.substringAfter("$").toDouble()
             }.reduce { a, b ->
                 return@reduce a + b
             }
-            Cart(cartItems, price)
+            Cart(cartItems.map { CartListItem(it.id, it.name, it.price) }, price)
         }
     }
 }
