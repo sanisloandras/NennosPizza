@@ -81,7 +81,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun test_onTapRemoveCartItem() {
+    fun test_onTapRemoveCartItem() = mainCoroutineRule.runBlockingTest {
         viewModel.onRemoveCartItem(cartListItems[0])
         verify(removeFromCartUseCase, times(1)).invoke(cartListItems[0])
     }
