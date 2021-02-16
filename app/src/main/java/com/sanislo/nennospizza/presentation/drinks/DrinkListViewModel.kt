@@ -11,7 +11,7 @@ class DrinkListViewModel(
         private val getDrinksUseCase: GetDrinksUseCase,
         private val addDrinkToCartUseCase: AddDrinkToCartUseCase
 ) : ViewModel() {
-    val drinks = liveData(ioDispatcher) { emit(getDrinksUseCase.invoke()) }
+    val drinks = liveData { emit(getDrinksUseCase.invoke()) }
 
     private val _drinkAddedToCart = MutableLiveData<Boolean>()
     val drinkAddedToCart: LiveData<Boolean> = _drinkAddedToCart.distinctUntilChanged()
@@ -19,15 +19,20 @@ class DrinkListViewModel(
     private var drinkAddedToCartJob: Job? = null
 
     private suspend fun drinkAddedToCartDelay(): Job {
-        return viewModelScope.launch {
+        /*return viewModelScope.launch {
             _drinkAddedToCart.postValue(true)
             delay(ADD_TO_CART_DELAY)
             _drinkAddedToCart.postValue(false)
+        }*/
+        return viewModelScope.launch {
+            _drinkAddedToCart.value = true
+            delay(ADD_TO_CART_DELAY)
+            _drinkAddedToCart.value = false
         }
     }
 
     fun addDrink(drinkListItem: DrinkListItem) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             addDrinkToCartUseCase.invoke(drinkListItem)
             drinkAddedToCartJob?.cancel()
             drinkAddedToCartJob = drinkAddedToCartDelay()

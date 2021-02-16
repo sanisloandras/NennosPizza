@@ -7,7 +7,7 @@ import java.util.*
 
 class AddPizzaToCartUseCase(private val pizzaCartDao: PizzaCartDao) {
 
-    fun invoke(pizzaName: String,
+    suspend fun invoke(pizzaName: String,
                addToCartState: AddToCartState,
                selectedIngredientIds: Set<Int>
     ) {

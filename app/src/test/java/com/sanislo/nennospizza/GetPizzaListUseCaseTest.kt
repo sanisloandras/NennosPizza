@@ -47,7 +47,7 @@ class GetPizzaListUseCaseTest {
             )
             Mockito.`when`(ingredientsRepository.ingredients()).thenReturn(ingredientsReponse)
 
-            val getPizzaListUseCase = GetPizzaListUseCase(mainCoroutineRule.dispatcher, pizzaRepository, ingredientsRepository)
+            val getPizzaListUseCase = GetPizzaListUseCase(pizzaRepository, ingredientsRepository, mainCoroutineRule.dispatcher)
             val pizzaList = getPizzaListUseCase.invoke()
             val expectedPizzaList = listOf(
                 PizzaListItem("mockPizza", "mockIngredient1, mockIngredient2", "$7.0", "mockImgUrl", setOf(1,2)),

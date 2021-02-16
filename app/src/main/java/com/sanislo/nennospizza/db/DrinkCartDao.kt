@@ -12,14 +12,14 @@ interface DrinkCartDao {
     fun insert(drinkCartItemEntity: DrinkCartItemEntity)
 
     @Query("SELECT * FROM drinkcartitementity")
-    fun all(): List<DrinkCartItemEntity>
+    suspend fun all(): List<DrinkCartItemEntity>
 
     @Query("SELECT * FROM drinkcartitementity")
     fun allFlow(): Flow<List<DrinkCartItemEntity>>
 
     @Query("DELETE FROM drinkcartitementity WHERE id = :id")
-    fun deleteById(id: String)
+    suspend fun deleteById(id: String)
 
     @Query("DELETE FROM drinkcartitementity")
-    fun clear()
+    suspend fun clear()
 }

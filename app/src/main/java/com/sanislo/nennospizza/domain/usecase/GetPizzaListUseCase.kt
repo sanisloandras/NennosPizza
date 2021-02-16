@@ -7,9 +7,9 @@ import kotlinx.coroutines.*
 import kotlin.jvm.Throws
 
 class GetPizzaListUseCase(
-        private val dispatcher: CoroutineDispatcher,
         private val pizzaRepository: PizzaRepository,
-                          private val ingredientsRepository: IngredientsRepository
+        private val ingredientsRepository: IngredientsRepository,
+        private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     @Throws(Exception::class)
     suspend fun invoke(): List<PizzaListItem> {

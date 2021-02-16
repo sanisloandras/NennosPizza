@@ -84,12 +84,20 @@ class PizzaDetailsViewModel(
     }
 
     fun addPizzaToCart(selection: Set<Int>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        /*viewModelScope.launch(Dispatchers.IO) {
             _addToCartEnabled.postValue(false)
             delay(ADD_TO_CART_DELAY)
             _addToCartEnabled.postValue(true)
         }
         viewModelScope.launch(Dispatchers.IO) {
+            addPizzaToCartUseCase.invoke(pizzaName.value!!, addToCartState.value!!, selection)
+        }*/
+        viewModelScope.launch {
+            _addToCartEnabled.value = false
+            delay(ADD_TO_CART_DELAY)
+            _addToCartEnabled.value = true
+        }
+        viewModelScope.launch {
             addPizzaToCartUseCase.invoke(pizzaName.value!!, addToCartState.value!!, selection)
         }
     }

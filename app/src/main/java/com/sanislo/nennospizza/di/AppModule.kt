@@ -44,7 +44,7 @@ val appModule = module {
     single<PizzaRepository> { PizzaRepositoryImpl(get()) }
     single<IngredientsRepository> { IngredientsRepositoryImpl(get()) }
     single<DrinksRepository> { DrinksRepositoryImpl(get()) }
-    factory { GetPizzaListUseCase(Dispatchers.IO, get(), get()) }
+    factory { GetPizzaListUseCase(get(), get()) }
     factory { AddPizzaToCartUseCase(get()) }
     factory { RemoveFromCartUseCase(get(), get()) }
     factory { CheckoutUseCase(get(), get(), get()) }
@@ -72,7 +72,7 @@ fun getModules(): List<Module> {
 }
 
 val pizzaListModule = module {
-    viewModel { PizzaListViewModel(Dispatchers.IO, get(), get()) }
+    viewModel { PizzaListViewModel(get(), get()) }
 }
 
 val pizzaDetailsModule = module {

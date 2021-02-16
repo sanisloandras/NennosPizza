@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class CartViewModel(
-        private val ioDispatcher: CoroutineDispatcher,
+        ioDispatcher: CoroutineDispatcher,
         private val checkoutUseCase: CheckoutUseCase,
         private val removeFromFromCartUseCase: RemoveFromCartUseCase,
         cartUseCase: CartUseCase) : ViewModel() {
@@ -27,19 +27,19 @@ class CartViewModel(
     val errors: LiveData<Event<Exception>> = _errors
 
     fun checkout() {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             try {
                 //todo maybe show progress for this, but the design is unknown
                 checkoutUseCase.invoke()
-                _navigateToThankYouEvent.postValue(Event(Unit))
+                _navigateToThankYouEvent.value = Event(Unit)
             } catch (e: Exception) {
-                _errors.postValue(Event(e))
+                _errors.value = Event(e)
             }
         }
     }
 
     fun onRemoveCartItem(cartListItem: CartListItem) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             removeFromFromCartUseCase.invoke(cartListItem)
         }
     }

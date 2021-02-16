@@ -60,8 +60,7 @@ class PizzaListVmTest {
     @Before
     fun setupViewModel() {
         `when`(getTransitionNameUseCase.invoke(anyInt())).thenReturn("mock_transition_name")
-        viewModel = PizzaListViewModel(mainCoroutineRule.dispatcher,
-                getPizzaDetailsUseCase,
+        viewModel = PizzaListViewModel(getPizzaDetailsUseCase,
                 getTransitionNameUseCase)
     }
 

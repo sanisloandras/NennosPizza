@@ -53,7 +53,7 @@ dependencies {
     implementation deps.app_compat
     implementation deps.constraint_layout
     implementation deps.junit
-    implementation deps.atsl.ext_junit
+    //implementation deps.atsl.ext_junit
 
     testImplementation deps.junit
     testImplementation deps.arch_core.testing

@@ -5,12 +5,10 @@ import com.sanislo.nennospizza.domain.usecase.GetPizzaListUseCase
 import com.sanislo.nennospizza.domain.usecase.GetTransitionNameUseCase
 import com.sanislo.nennospizza.presentation.Event
 import com.sanislo.nennospizza.presentation.details.PizzaDetailsInput
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PizzaListViewModel(
-        private val ioDispatcher: CoroutineDispatcher,
         private val getPizzaListUseCase: GetPizzaListUseCase,
         private val getTransitionNameUseCase: GetTransitionNameUseCase
 ) : ViewModel() {
@@ -30,15 +28,15 @@ class PizzaListViewModel(
     val isLoading: LiveData<Boolean> = _isLoading
 
     fun load() {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             try {
                 //todo mimic longer load time, should remove for production x)
                 delay(1_000)
-                _pizzaList.postValue(getPizzaListUseCase.invoke())
+                _pizzaList.value = getPizzaListUseCase.invoke()
             } catch (e: Exception) {
-                _errors.postValue(Event(e))
+                _errors.value = Event(e)
             }
-            _isLoading.postValue(false)
+            _isLoading.value = false
         }
     }
 
